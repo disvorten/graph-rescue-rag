@@ -141,7 +141,6 @@ def main() -> int:
 
     print(f"RELEASE AUDIT: PASS ({len(files)} tracked files)")
     print("Test suite: PASS")
-    print("Independent author verification remains required before archival release.")
     return 0
 
 

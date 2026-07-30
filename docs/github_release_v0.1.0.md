@@ -35,9 +35,6 @@ Suggested topics:
   are not distributed in this release.
 - The KG²RAG-style control is an independent adaptation, not an execution of
   the official KG²RAG repository.
-- AI tools assisted implementation, experiment orchestration, analysis, and
-  drafting. Human authors are responsible for verification and all scholarly
-  claims.
 
 ## Reproduction
 

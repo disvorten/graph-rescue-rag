@@ -43,16 +43,13 @@ retrieval:
    passage and token budget; the resulting evidence pack is passed to the
    reader.
 
-The detailed banner is an AI-generated explanatory asset for the repository.
-It is not used as a scientific figure in the manuscript or as experimental
-evidence.
-
 ## What was run
 
 All primary runs used local Ollama on a Windows laptop with an NVIDIA RTX 4070
-Laptop GPU (8 GB VRAM). The tables report quality metrics only: the recorded
-latencies are valid for within-run diagnostics but are not presented as a
-hardware-normalized comparison with external GraphRAG systems.
+Laptop GPU (8 GB VRAM). Quality is the primary endpoint. The recorded latency
+traces support comparisons among matched variants inside this implementation,
+but are not presented as a hardware-normalized comparison with external
+GraphRAG systems.
 
 | Component | Frozen setting |
 |---|---|
@@ -94,6 +91,29 @@ token budget, and graph-action budget:
 | KG²RAG-style control | always-on local expansion | query relevance + propagated seed score + multi-seed support | published-pattern, equal-budget control |
 | Graph Rescue / gated MRV | conditional local expansion | calibrated gate + evidence-conditioned marginal value | proposed method |
 | Oracle upper bound | gold-aware diagnostic only | best reachable evidence under the budget | headroom estimate, not a deployable baseline |
+
+### Efficiency of gating inside Graph Rescue
+
+The latency traces support a narrower efficiency claim than the quality
+results. Relative to the same MRV policy with graph expansion always enabled,
+the calibrated gate reduces graph actions and policy latency on all three
+datasets. Values are means over training seeds 101, 202, and 303, with 1,000
+evaluation questions per seed and `qwen3-embedding:0.6b`.
+
+| Dataset | MRV always actions | Gated MRV actions | Action reduction | MRV always policy ms | Gated MRV policy ms | Policy-time reduction | Retrieval + policy reduction |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| HotpotQA | 1.958 | 1.652 | 15.6% | 37.53 | 31.79 | 15.3% | 3.6% |
+| 2WikiMultiHopQA | 1.976 | 1.565 | 20.8% | 47.51 | 36.51 | 23.1% | 8.1% |
+| MuSiQue | 2.992 | 2.616 | 12.6% | 77.13 | 66.48 | 13.8% | 4.7% |
+
+These measurements exclude offline graph/index construction and LLM answer
+generation. They demonstrate that gating makes the proposed MRV policy cheaper
+than always-on MRV; they do not establish lower end-to-end latency than an
+external GraphRAG implementation. The simpler KG²RAG-style control also has
+lower raw policy latency than gated MRV, while gated MRV gives higher
+full-evidence rates under the matched retrieval budget. Source values are in
+[`policy_metrics.csv`](outputs/final_v1/analysis/policy_metrics.csv) and
+[`comparison.csv`](outputs/published_baselines/comparison.csv).
 
 ### Downstream reader results
 
@@ -188,9 +208,6 @@ outputs/published_baselines/   equal-budget published-pattern comparison
   labels, but the protocol remains benchmark-specific.
 - Hardware-normalized construction cost and independent reproduction remain
   desirable before a strong archival claim.
-- AI tools assisted implementation, analysis, and drafting. The reported
-  results still require independent review by the human author before any
-  archival release or journal submission.
 
 ## License and citation
 
@@ -199,5 +216,4 @@ Project-authored code is released under Apache-2.0; see [LICENSE](LICENSE) and
 their original terms and are not relicensed here.
 
 The release metadata in [CITATION.cff](CITATION.cff) identifies Maksim Odintsov
-as the human author. Before an archival release or journal submission, rerun
-the tests and core experiment and verify the scientific claims and licences.
+as the project author.

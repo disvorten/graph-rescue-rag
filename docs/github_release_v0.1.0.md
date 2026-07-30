@@ -5,7 +5,7 @@ retrieval.
 
 Suggested GitHub description:
 
-> Selective, budget-aware graph rescue after BM25+dense+reranker retrieval for multi-hop evidence chains.
+> Selective local graph rescue after hybrid retrieval for multi-hop RAG, with calibrated gating and equal-budget evaluation.
 
 Suggested topics:
 
@@ -26,6 +26,28 @@ Suggested topics:
 - compact aggregate tables, tests, and reproducibility scripts. Full
   manuscript drafts remain local until the selected venue confirms its
   preprint/public-repository policy.
+
+## Reproducible claim
+
+Under the frozen pooled-corpus protocol with 1,000 disjoint evaluation
+questions per dataset, gated MRV increased the full-evidence rate over the
+shared hybrid baseline on all three datasets:
+
+- HotpotQA: `0.640 → 0.810`, Δ `+0.170`, 95% paired bootstrap CI
+  `[0.143, 0.197]`;
+- 2WikiMultiHopQA: `0.367 → 0.572`, Δ `+0.205`,
+  `[0.178, 0.231]`;
+- MuSiQue: `0.156 → 0.252`, Δ `+0.096`,
+  `[0.074, 0.118]`.
+
+## Negative finding
+
+Graph expansion is substantially more sensitive to false edges than to missing
+edges. In the five-seed corruption study, at a 25% corruption dose the
+full-evidence disadvantage of false-edge injection relative to edge dropout
+was `0.172` on HotpotQA, `0.178` on 2WikiMultiHopQA, and `0.082` on MuSiQue.
+This makes edge precision and denoising a higher priority than increasing graph
+recall indiscriminately.
 
 ## Important scope notes
 
@@ -48,6 +70,4 @@ before using or redistributing a modified snapshot.
 
 ## Citation
 
-Use the release `CITATION.cff` and Zenodo DOI. The human author metadata are
-filled; do not create the archival release until the scientific claims,
-licences, and clean-environment reproduction have been checked.
+Use the release `CITATION.cff` and the DOI assigned by Zenodo.

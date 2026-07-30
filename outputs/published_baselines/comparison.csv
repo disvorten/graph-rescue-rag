@@ -1,0 +1,4 @@
+dataset,queries,full_evidence,support_recall,support_ndcg,graph_actions,graph_reads,policy_latency_ms,delta_vs_hybrid,delta_vs_hybrid_ci_low,delta_vs_hybrid_ci_high,delta_vs_gated,delta_vs_gated_ci_low,delta_vs_gated_ci_high,wins_vs_hybrid,losses_vs_hybrid,ties_vs_hybrid,wins_vs_gated,losses_vs_gated,ties_vs_gated,budget_violations,seed_mismatches
+hotpot,1000,0.743,0.8635,0.7436415655843669,2.0,2092.034,14.214533099671826,0.103,0.08,0.127,-0.067,-0.089,-0.045,130,27,843,30,97,873,0,0
+2wiki,1000,0.494,0.76525,0.7050501890368877,1.999,3169.994,19.394520500209183,0.127,0.105,0.15,-0.078,-0.10202499999999999,-0.053,138,11,851,44,122,834,0,0
+musique,1000,0.202,0.532,0.44209379766760387,3.0,1941.903,19.994286998873577,0.046,0.027,0.065,-0.05,-0.067,-0.034,70,24,906,13,63,924,0,0

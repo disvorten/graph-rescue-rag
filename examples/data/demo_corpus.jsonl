@@ -1,0 +1,20 @@
+{"id":"p01","title":"Maya Chen","text":"Chemist Maya Chen discovered the blue mineral asterite. She studied at Ravel Institute.","entities":["Maya Chen","asterite","Ravel Institute"],"links":["p02","d01","d02"]}
+{"id":"p02","title":"Ravel Institute","text":"Ravel Institute is a research university located in the city of Norwick.","entities":["Ravel Institute","Norwick"],"links":[]}
+{"id":"p03","title":"Ivo Marin","text":"Novelist Ivo Marin wrote The Silent Meridian. He graduated from Beacon College.","entities":["Ivo Marin","The Silent Meridian","Beacon College"],"links":["p04","d01"]}
+{"id":"p04","title":"Beacon College","text":"Beacon College is an independent university in the coastal city of Selene.","entities":["Beacon College","Selene"],"links":[]}
+{"id":"p05","title":"Lena Ortiz","text":"Engineer Lena Ortiz designed the Argo turbine after studying at Cedar Polytechnic.","entities":["Lena Ortiz","Argo turbine","Cedar Polytechnic"],"links":["p06","d01"]}
+{"id":"p06","title":"Cedar Polytechnic","text":"Cedar Polytechnic has its main campus in the city of Velin.","entities":["Cedar Polytechnic","Velin"],"links":[]}
+{"id":"p07","title":"Tomas Vale","text":"Explorer Tomas Vale mapped the Oris caves. Vale trained at Meridian Academy.","entities":["Tomas Vale","Oris caves","Meridian Academy"],"links":["p08","d01"]}
+{"id":"p08","title":"Meridian Academy","text":"Meridian Academy is based in the mountain city of Arken.","entities":["Meridian Academy","Arken"],"links":[]}
+{"id":"p09","title":"Nira Sol","text":"Astronomer Nira Sol identified comet Lumen and attended Horizon University.","entities":["Nira Sol","comet Lumen","Horizon University"],"links":["p10","d02"]}
+{"id":"p10","title":"Horizon University","text":"Horizon University is located in the city of Darsen beside Lake Miro.","entities":["Horizon University","Darsen","Lake Miro"],"links":[]}
+{"id":"p11","title":"Oren Voss","text":"Composer Oren Voss created the opera Glass Harbor and studied at Amber Conservatory.","entities":["Oren Voss","Glass Harbor","Amber Conservatory"],"links":["p12","d01"]}
+{"id":"p12","title":"Amber Conservatory","text":"Amber Conservatory is a music school in the city of Caldor.","entities":["Amber Conservatory","Caldor"],"links":[]}
+{"id":"p13","title":"Rina Hale","text":"Biologist Rina Hale classified the fern silvara. Hale was educated at Pine University.","entities":["Rina Hale","silvara","Pine University"],"links":["p14","d01","d02"]}
+{"id":"p14","title":"Pine University","text":"Pine University occupies a historic campus in the city of Eston.","entities":["Pine University","Eston"],"links":[]}
+{"id":"p15","title":"Eli Ward","text":"Architect Eli Ward designed the Crescent Library and attended Stonebridge School.","entities":["Eli Ward","Crescent Library","Stonebridge School"],"links":["p16","d01"]}
+{"id":"p16","title":"Stonebridge School","text":"Stonebridge School is an architecture college in the city of Brin.","entities":["Stonebridge School","Brin"],"links":[]}
+{"id":"d01","title":"University cities","text":"Many researchers attend a university in a city before making a discovery. Their college location may differ from their birthplace.","entities":["university","city"],"links":[]}
+{"id":"d02","title":"Scientific discoveries","text":"A discovery can be named after a scientist, a city, a mineral, a comet, or a university.","entities":["discovery","scientist","city","university"],"links":[]}
+{"id":"d03","title":"Norwick Harbor","text":"Norwick Harbor is known for shipbuilding and coastal mineral trading.","entities":["Norwick"],"links":[]}
+{"id":"d04","title":"Selene Observatory","text":"Selene Observatory studies comets and trains visiting university researchers.","entities":["Selene","comets","university"],"links":[]}

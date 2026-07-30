@@ -1,0 +1,59 @@
+name: Reproduction report
+description: Report a successful or failed attempt to reproduce a documented result.
+title: "[Reproduction]: "
+labels: ["reproduction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for testing Graph Rescue RAG. Do not attach benchmark text,
+        model caches, credentials, or per-query generations.
+  - type: input
+    id: release
+    attributes:
+      label: Release or commit
+      description: Tag or full commit SHA used for the run.
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Reproduction scope
+      options:
+        - Smoke test
+        - Retrieval table
+        - Reader evaluation
+        - Robustness evaluation
+        - Package installation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python, model names/versions, and relevant hardware.
+    validations:
+      required: true
+  - type: textarea
+    id: commands
+    attributes:
+      label: Commands
+      description: Exact documented commands, with local paths and secrets removed.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: Expected and observed aggregate metrics or the complete error.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Data safety
+      options:
+        - label: I removed benchmark text, credentials, caches, and personal paths.
+          required: true

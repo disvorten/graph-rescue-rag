@@ -1,0 +1,48 @@
+{
+  "corpus_path": "../work/musique_large/corpus.jsonl",
+  "train_queries_path": "../work/musique_large/train.jsonl",
+  "eval_queries_path": "../work/musique_large/eval.jsonl",
+  "output_dir": "../outputs/musique_large",
+  "cache_dir": "../work/musique_pilot/cache",
+  "model_dir": "../work/musique_large/models",
+  "ollama": {
+    "base_url": "http://127.0.0.1:11434",
+    "embedding_model": "qwen3-embedding:0.6b",
+    "generation_model": "qwen3:1.7b",
+    "timeout_seconds": 240,
+    "reader_policies": []
+  },
+  "retrieval": {
+    "bm25_k": 160,
+    "dense_k": 160,
+    "rrf_k": 60,
+    "rerank_k": 80,
+    "seed_k": 2,
+    "final_k": 8,
+    "evidence_token_budget": 2800
+  },
+  "graph": {
+    "max_hops": 3,
+    "frontier_cap": 200,
+    "max_actions": 3,
+    "min_entity_df": 2,
+    "max_entity_df_ratio": 0.03
+  },
+  "learning": {
+    "epochs": 400,
+    "learning_rate": 0.05,
+    "l2": 0.02,
+    "calibration_fraction": 0.20,
+    "gate_target_recall": 0.95,
+    "gate_calibration_method": "auto",
+    "gate_calibration_folds": 5,
+    "gate_threshold_bootstrap_samples": 500,
+    "gate_threshold_quantile": 0.10,
+    "counterfactual_labels_path": "../work/musique_large/counterfactual_labels.jsonl",
+    "reader_gain_weight": 0.50,
+    "token_cost_weight": 0.05,
+    "hop_cost_weight": 0.04,
+    "noise_cost_weight": 0.08,
+    "random_seed": 54
+  }
+}

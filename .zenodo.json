@@ -1,0 +1,18 @@
+{
+  "title": "Graph Rescue RAG: Selective Marginal-Value Graph Expansion after Hybrid Retrieval",
+  "description": "Code, compact aggregate results, and manuscript artifacts for a cost-aware hybrid retrieval and selective graph expansion study.",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "Odintsov, Maksim",
+      "orcid": "0009-0000-6756-0975"
+    }
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "retrieval-augmented generation",
+    "graph retrieval",
+    "multi-hop question answering",
+    "information retrieval"
+  ]
+}

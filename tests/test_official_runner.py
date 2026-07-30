@@ -1,0 +1,134 @@
+import json
+import tempfile
+import unittest
+from pathlib import Path
+
+from graph_rescue.official_runner import score_official_predictions
+
+
+class OfficialRunnerTests(unittest.TestCase):
+    def test_official_hotpot_scorer(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            prediction = root / "prediction.json"
+            gold = root / "gold.json"
+            prediction.write_text(
+                json.dumps(
+                    {
+                        "answer": {"q1": "Paris"},
+                        "sp": {"q1": [["France", 0]]},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            gold.write_text(
+                json.dumps(
+                    [
+                        {
+                            "_id": "q1",
+                            "answer": "Paris",
+                            "supporting_facts": [["France", 0]],
+                        }
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            result = score_official_predictions(
+                dataset="hotpot",
+                prediction_path=prediction,
+                gold_path=gold,
+            )
+        self.assertEqual(result["metrics"]["joint_f1"], 1.0)
+
+    def test_official_2wiki_scorer_with_json_shim(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            prediction = root / "prediction.json"
+            gold = root / "gold.json"
+            aliases = root / "aliases.jsonl"
+            prediction.write_text(
+                json.dumps(
+                    {
+                        "answer": {"q1": "\u041f\u0430\u0440\u0438\u0436"},
+                        "sp": {"q1": [["France", 0]]},
+                        "evidence": {"q1": []},
+                    },
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            gold.write_text(
+                json.dumps(
+                    [
+                        {
+                            "_id": "q1",
+                            "answer": "\u041f\u0430\u0440\u0438\u0436",
+                            "answer_id": "Q90",
+                            "supporting_facts": [["France", 0]],
+                            "evidences": [],
+                            "evidences_id": [],
+                        }
+                    ],
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            aliases.write_text(
+                json.dumps(
+                    {"Q_id": "Q90", "aliases": [], "demonyms": []}
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            result = score_official_predictions(
+                dataset="2wiki",
+                prediction_path=prediction,
+                gold_path=gold,
+                alias_path=aliases,
+            )
+        self.assertEqual(result["metrics"]["f1"], 100.0)
+        self.assertEqual(result["metrics"]["sp_f1"], 100.0)
+
+    def test_official_musique_scorer(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            prediction = root / "prediction.jsonl"
+            gold = root / "gold.jsonl"
+            prediction.write_text(
+                json.dumps(
+                    {
+                        "id": "q1",
+                        "predicted_answer": "Paris",
+                        "predicted_support_idxs": [0],
+                        "predicted_answerable": True,
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            gold.write_text(
+                json.dumps(
+                    {
+                        "id": "q1",
+                        "answer": "Paris",
+                        "answer_aliases": [],
+                        "answerable": True,
+                        "paragraphs": [
+                            {"idx": 0, "is_supporting": True}
+                        ],
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            result = score_official_predictions(
+                dataset="musique",
+                prediction_path=prediction,
+                gold_path=gold,
+            )
+        self.assertEqual(result["metrics"]["answer_f1"], 1.0)
+        self.assertEqual(result["metrics"]["support_f1"], 1.0)
+
+
+if __name__ == "__main__":
+    unittest.main()

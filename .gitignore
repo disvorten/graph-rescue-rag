@@ -1,0 +1,68 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+build/
+dist/
+*.egg-info/
+tmp/
+
+# Research data, caches, checkpoints, and run logs are private/local by default.
+work/*
+!work/prepare_external_pilots.py
+!work/prepare_final_protocol.py
+!work/run_final_suite.py
+!work/run_final_robustness.py
+!work/analyze_multiseed_robustness.py
+!work/analyze_full_reader.py
+!work/prepare_reader_subset.py
+!work/prepare_trace_audit.py
+!work/run_reader_analysis.py
+!work/analyze_final_results.py
+!work/generate_paper_assets.py
+!work/run_kg2rag_style_baseline.py
+!work/analyze_published_baselines.py
+!work/update_theory_doc_v5.py
+!work/qa_docx.py
+!work/doc_assets/
+work/doc_assets/*
+!work/doc_assets/architecture.png
+!work/doc_assets/failure_funnel.png
+
+# Compact, publication-facing artifacts only.
+outputs/*
+!outputs/FINAL_EXPERIMENT_REPORT_RU.md
+!outputs/REPRODUCIBILITY_MANIFEST.md
+!outputs/PUBLICATION_PLAN_RU.md
+!outputs/PUBLICATION_AND_GITHUB_STRATEGY_RU_v2.md
+
+!outputs/final_v1/
+outputs/final_v1/*
+!outputs/final_v1/analysis/
+!outputs/final_v1/analysis/**
+
+!outputs/published_baselines/
+outputs/published_baselines/*
+!outputs/published_baselines/summary.json
+!outputs/published_baselines/comparison.csv
+!outputs/published_baselines/REPORT_RU.md
+
+# Full Word/LaTeX manuscripts remain local until the selected venue confirms
+# its preprint/public-repository policy. Compact aggregate results stay public.
+outputs/Graph_Rescue_RAG_Theory_and_Results_v5.docx
+outputs/Graph_Rescue_RAG_Article_RU_draft.md
+outputs/Graph_Rescue_RAG_Article_RU_draft.docx
+outputs/graph_rescue_article/
+
+# Internal author-review materials are retained locally and are not published.
+RELEASE_CHECKLIST.md
+outputs/AI_USE_AND_HUMAN_REVIEW_RU.md
+outputs/TRACE_AUDIT_GUIDE_RU.md
+
+# LaTeX intermediates and local process artifacts.
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.pid

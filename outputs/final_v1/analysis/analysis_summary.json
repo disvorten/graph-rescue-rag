@@ -1,0 +1,16 @@
+{
+  "runs": 12,
+  "datasets": [
+    "2wiki",
+    "hotpot",
+    "musique"
+  ],
+  "paired_queries": 3000,
+  "wins": 691,
+  "losses": 133,
+  "ties": 2176,
+  "robustness_rows": 72,
+  "reader_rows": 6,
+  "primary_embedding": "qwen3-embedding_0.6b",
+  "primary_seed": 101
+}

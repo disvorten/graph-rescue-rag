@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "raw_rows": 216,
+  "aggregate_rows": 48,
+  "dose_response_checks": [
+    {
+      "dataset": "2wiki",
+      "family": "dropout",
+      "conditions_present": 3,
+      "nonincreasing_mean": true
+    },
+    {
+      "dataset": "2wiki",
+      "family": "false_edges",
+      "conditions_present": 3,
+      "nonincreasing_mean": true
+    },
+    {
+      "dataset": "hotpot",
+      "family": "dropout",
+      "conditions_present": 3,
+      "nonincreasing_mean": true
+    },
+    {
+      "dataset": "hotpot",
+      "family": "false_edges",
+      "conditions_present": 3,
+      "nonincreasing_mean": true
+    },
+    {
+      "dataset": "musique",
+      "family": "dropout",
+      "conditions_present": 3,
+      "nonincreasing_mean": true
+    },
+    {
+      "dataset": "musique",
+      "family": "false_edges",
+      "conditions_present": 3,
+      "nonincreasing_mean": true
+    }
+  ]
+}

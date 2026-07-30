@@ -1,0 +1,17 @@
+Graph Rescue RAG
+Copyright 2026 Maksim Odintsov
+
+Project-authored source code is licensed under the Apache License, Version 2.0.
+
+This distribution does not include or relicense benchmark datasets, model
+weights, model outputs, or upstream evaluator implementations. HotpotQA,
+2WikiMultiHopQA, MuSiQue, Ollama models, and any other third-party material
+remain subject to their respective authors' terms. See DATA.md.
+
+The KG²RAG-style experimental control is an independent implementation of a
+published algorithmic pattern. No source code from the GPL-3.0 KG2RAG
+repository was copied into this project.
+
+The manuscript and documentation were produced with AI assistance and require
+human scholarly review before submission. Authorship and accountability must
+remain with the human authors.

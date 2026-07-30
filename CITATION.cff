@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both the software release and the accompanying article."
+title: "Graph Rescue RAG: Selective Marginal-Value Graph Expansion after Hybrid Retrieval"
+type: software
+version: 0.1.0
+date-released: "2026-07-30"
+authors:
+  - family-names: "Odintsov"
+    given-names: "Maksim"
+    orcid: "https://orcid.org/0009-0000-6756-0975"
+    email: "maksim.odintcov@math.msu.ru"
+repository-code: "https://github.com/disvorten/graph-rescue-rag"
+url: "https://github.com/disvorten/graph-rescue-rag"
+license: Apache-2.0
+keywords:
+  - retrieval-augmented generation
+  - graph retrieval
+  - multi-hop question answering
+  - information retrieval
+  - selective computation

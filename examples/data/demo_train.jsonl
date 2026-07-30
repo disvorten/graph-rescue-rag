@@ -1,0 +1,12 @@
+{"id":"t01","question":"In which city is the institute attended by the discoverer of asterite?","answers":["Norwick"],"supporting_passage_ids":["p01","p02"]}
+{"id":"t02","question":"In which city is the college attended by the author of The Silent Meridian?","answers":["Selene"],"supporting_passage_ids":["p03","p04"]}
+{"id":"t03","question":"Where is the polytechnic attended by the designer of the Argo turbine?","answers":["Velin"],"supporting_passage_ids":["p05","p06"]}
+{"id":"t04","question":"Which city contains the academy where the mapper of the Oris caves trained?","answers":["Arken"],"supporting_passage_ids":["p07","p08"]}
+{"id":"t05","question":"Where is the university attended by the astronomer who identified comet Lumen?","answers":["Darsen"],"supporting_passage_ids":["p09","p10"]}
+{"id":"t06","question":"Which city is home to the conservatory attended by the composer of Glass Harbor?","answers":["Caldor"],"supporting_passage_ids":["p11","p12"]}
+{"id":"t07","question":"Who discovered the blue mineral asterite?","answers":["Maya Chen"],"supporting_passage_ids":["p01"]}
+{"id":"t08","question":"What did Ivo Marin write?","answers":["The Silent Meridian"],"supporting_passage_ids":["p03"]}
+{"id":"t09","question":"Who designed the Argo turbine?","answers":["Lena Ortiz"],"supporting_passage_ids":["p05"]}
+{"id":"t10","question":"Who mapped the Oris caves?","answers":["Tomas Vale"],"supporting_passage_ids":["p07"]}
+{"id":"t11","question":"Who identified comet Lumen?","answers":["Nira Sol"],"supporting_passage_ids":["p09"]}
+{"id":"t12","question":"Who composed the opera Glass Harbor?","answers":["Oren Voss"],"supporting_passage_ids":["p11"]}

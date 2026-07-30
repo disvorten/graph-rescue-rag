@@ -1,0 +1,41 @@
+{
+  "corpus_path": "data/demo_corpus.jsonl",
+  "train_queries_path": "data/demo_train.jsonl",
+  "eval_queries_path": "data/demo_eval.jsonl",
+  "output_dir": "../outputs/demo_reader_experiment",
+  "cache_dir": "../work/cache",
+  "model_dir": "../work/models",
+  "ollama": {
+    "base_url": "http://127.0.0.1:11434",
+    "embedding_model": "qwen3-embedding:0.6b",
+    "generation_model": "qwen3:1.7b",
+    "timeout_seconds": 180
+  },
+  "retrieval": {
+    "bm25_k": 20,
+    "dense_k": 20,
+    "rrf_k": 60,
+    "rerank_k": 20,
+    "seed_k": 1,
+    "final_k": 2,
+    "evidence_token_budget": 512
+  },
+  "graph": {
+    "max_hops": 2,
+    "frontier_cap": 50,
+    "max_actions": 1,
+    "min_entity_df": 1,
+    "max_entity_df_ratio": 1.0
+  },
+  "learning": {
+    "epochs": 400,
+    "learning_rate": 0.05,
+    "l2": 0.02,
+    "calibration_fraction": 0.25,
+    "gate_target_recall": 0.95,
+    "token_cost_weight": 0.04,
+    "hop_cost_weight": 0.03,
+    "noise_cost_weight": 0.05,
+    "random_seed": 42
+  }
+}

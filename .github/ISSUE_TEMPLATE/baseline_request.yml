@@ -1,0 +1,31 @@
+name: Baseline request
+description: Propose a comparable graph or retrieval baseline.
+title: "[Baseline]: "
+labels: ["baseline"]
+body:
+  - type: input
+    id: paper
+    attributes:
+      label: Paper
+      description: DOI, arXiv, or official publication URL.
+    validations:
+      required: true
+  - type: input
+    id: code
+    attributes:
+      label: Official code
+      description: Public repository or artifact URL, if available.
+  - type: textarea
+    id: comparison
+    attributes:
+      label: Why it is comparable
+      description: Explain the retrieval stage, graph access, budget, and datasets.
+    validations:
+      required: true
+  - type: checkboxes
+    id: licensing
+    attributes:
+      label: Availability
+      options:
+        - label: I checked that the linked code/data terms permit research use.
+          required: true

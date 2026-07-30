@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "complete": true,
+  "datasets_complete": [
+    "hotpot",
+    "2wiki",
+    "musique"
+  ],
+  "datasets_missing": [],
+  "results": [
+    {
+      "dataset": "hotpot",
+      "queries": 1000,
+      "query_id_sha256": "c966c2962e38c0d9a4e1b2b218e57b3a5a7b810f13d7b2f525a1f8c42b94ff45",
+      "hybrid": {
+        "answer_em": 0.335,
+        "answer_f1": 0.42289643689643697,
+        "support_em": 0.041,
+        "support_f1": 0.4248888888888906,
+        "joint_f1": 0.2291862257368774
+      },
+      "mrv_gated": {
+        "answer_em": 0.37,
+        "answer_f1": 0.4646719558219559,
+        "support_em": 0.043,
+        "support_f1": 0.45711031746031977,
+        "joint_f1": 0.2609890545979303
+      },
+      "reader_stats": {
+        "generation_calls": 1648,
+        "cache_hits": 352
+      },
+      "inference": {
+        "source": "official_per_query_recomputation",
+        "bootstrap_samples": 5000,
+        "bootstrap_seed": 101,
+        "holm_family": [
+          "answer_em",
+          "answer_f1",
+          "joint_f1",
+          "support_em",
+          "support_f1"
+        ]
+      },
+      "deltas": {
+        "answer_em": {
+          "difference": 0.035,
+          "ci95_low": 0.013975000000000008,
+          "ci95_high": 0.057,
+          "p_value_two_sided": 0.0036,
+          "p_value_holm": 0.0072
+        },
+        "answer_f1": {
+          "difference": 0.04177551892551892,
+          "ci95_low": 0.019557440476190475,
+          "ci95_high": 0.06434157051282052,
+          "p_value_two_sided": 0.0008,
+          "p_value_holm": 0.0024000000000000002
+        },
+        "joint_f1": {
+          "difference": 0.03180282886105317,
+          "ci95_low": 0.016727815752553096,
+          "ci95_high": 0.047315886577496954,
+          "p_value_two_sided": 0.0004,
+          "p_value_holm": 0.0016
+        },
+        "support_em": {
+          "difference": 0.002,
+          "ci95_low": -0.007,
+          "ci95_high": 0.011,
+          "p_value_two_sided": 0.7792,
+          "p_value_holm": 0.7792
+        },
+        "support_f1": {
+          "difference": 0.03222142857142857,
+          "ci95_low": 0.016483630952380954,
+          "ci95_high": 0.04756017857142856,
+          "p_value_two_sided": 0.0,
+          "p_value_holm": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "2wiki",
+      "queries": 1000,
+      "query_id_sha256": "c5a221b456525eae49628f2dd9227904d374fe07125c27b8f9d8427610f6a138",
+      "hybrid": {
+        "answer_em": 0.16399999999999998,
+        "answer_f1": 0.2318,
+        "support_em": 0.053,
+        "support_f1": 0.3841,
+        "joint_f1": 0.0015
+      },
+      "mrv_gated": {
+        "answer_em": 0.233,
+        "answer_f1": 0.30670000000000003,
+        "support_em": 0.057999999999999996,
+        "support_f1": 0.4183,
+        "joint_f1": 0.0018
+      },
+      "reader_stats": {
+        "generation_calls": 1622,
+        "cache_hits": 378
+      },
+      "inference": {
+        "source": "official_per_query_recomputation",
+        "bootstrap_samples": 5000,
+        "bootstrap_seed": 101,
+        "holm_family": [
+          "answer_em",
+          "answer_f1",
+          "support_em",
+          "support_f1"
+        ]
+      },
+      "deltas": {
+        "answer_em": {
+          "difference": 0.069,
+          "ci95_low": 0.049,
+          "ci95_high": 0.09,
+          "p_value_two_sided": 0.0,
+          "p_value_holm": 0.0
+        },
+        "answer_f1": {
+          "difference": 0.07490656565656564,
+          "ci95_low": 0.053956499472749476,
+          "ci95_high": 0.09683031204906203,
+          "p_value_two_sided": 0.0,
+          "p_value_holm": 0.0
+        },
+        "support_em": {
+          "difference": 0.005,
+          "ci95_low": -0.003,
+          "ci95_high": 0.013,
+          "p_value_two_sided": 0.2688,
+          "p_value_holm": 0.2688
+        },
+        "support_f1": {
+          "difference": 0.03417142857142856,
+          "ci95_low": 0.017969166666666665,
+          "ci95_high": 0.05019523809523809,
+          "p_value_two_sided": 0.0,
+          "p_value_holm": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "musique",
+      "queries": 1000,
+      "query_id_sha256": "7adfc222e672e73bbb36f357f683638f2a8af66467e01548193243320b574d82",
+      "hybrid": {
+        "answer_em": 0.087,
+        "answer_f1": 0.133,
+        "support_em": null,
+        "support_f1": 0.304,
+        "joint_f1": null
+      },
+      "mrv_gated": {
+        "answer_em": 0.104,
+        "answer_f1": 0.151,
+        "support_em": null,
+        "support_f1": 0.305,
+        "joint_f1": null
+      },
+      "reader_stats": {
+        "generation_calls": 1777,
+        "cache_hits": 223
+      },
+      "inference": {
+        "source": "official_per_query_recomputation",
+        "bootstrap_samples": 5000,
+        "bootstrap_seed": 101,
+        "holm_family": [
+          "answer_em",
+          "answer_f1",
+          "support_f1"
+        ]
+      },
+      "deltas": {
+        "answer_em": {
+          "difference": 0.017,
+          "ci95_low": 0.001,
+          "ci95_high": 0.033,
+          "p_value_two_sided": 0.048,
+          "p_value_holm": 0.126
+        },
+        "answer_f1": {
+          "difference": 0.018265201465201466,
+          "ci95_low": 0.0007841330891330873,
+          "ci95_high": 0.0357007967032967,
+          "p_value_two_sided": 0.042,
+          "p_value_holm": 0.126
+        },
+        "support_f1": {
+          "difference": 0.0015849206349206363,
+          "ci95_low": -0.012534107142857144,
+          "ci95_high": 0.015554682539682528,
+          "p_value_two_sided": 0.8104,
+          "p_value_holm": 0.8104
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{"id":"e01","question":"In what city is the university attended by the classifier of the fern silvara?","answers":["Eston"],"supporting_passage_ids":["p13","p14"]}
+{"id":"e02","question":"Where is the school attended by the architect of the Crescent Library?","answers":["Brin"],"supporting_passage_ids":["p15","p16"]}
+{"id":"e03","question":"Who designed the Crescent Library?","answers":["Eli Ward"],"supporting_passage_ids":["p15"]}
+{"id":"e04","question":"Which city has a harbor known for mineral trading?","answers":["Norwick"],"supporting_passage_ids":["d03"]}

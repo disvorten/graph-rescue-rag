@@ -98,6 +98,13 @@ def score_official_predictions(
     else:
         raise ValueError(f"Unsupported dataset: {dataset}")
 
+    if not evaluator.is_file():
+        raise FileNotFoundError(
+            f"Official {dataset} evaluator was not found at {evaluator}. "
+            "Download the dataset's official scoring script before running "
+            "official evaluation."
+        )
+
     evaluator_env = os.environ.copy()
     evaluator_env["PYTHONUTF8"] = "1"
     evaluator_env["PYTHONIOENCODING"] = "utf-8"

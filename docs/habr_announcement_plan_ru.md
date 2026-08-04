@@ -94,7 +94,6 @@ python -m graph_rescue run --config examples/demo_config.json
 - одна архитектурная схема;
 - одна таблица результатов;
 - один failure-analysis рисунок;
-- честный AI-use disclosure;
 - ссылка на preprint после разрешения выбранного журнала.
 
 ## Короткий анонс

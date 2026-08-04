@@ -1,0 +1,358 @@
+{
+  "protocol": "target-domain-gate-recalibration-v1",
+  "calibration_queries_per_dataset": 200,
+  "selection_seed": 20260804,
+  "datasets": {
+    "hotpot": {
+      "available_preflight_examples": 5199,
+      "calibration_queries": 200,
+      "heldout_test_queries": 4999,
+      "target_recall": 0.95,
+      "selected_recalibration_method": "platt",
+      "gate_target_reconstruction_matches_primary_evaluator": true,
+      "frozen_threshold": 0.12330911558476408,
+      "recalibrated_threshold": 0.15676466065566827,
+      "frozen_gate_on_heldout": {
+        "auroc": 0.7113301117854489,
+        "auprc": 0.566148047111475,
+        "brier": 0.21505730984729013,
+        "ece": 0.12164140979199095,
+        "threshold": 0.12330911558476408,
+        "precision": 0.46609257265877285,
+        "recall": 0.7504332755632582,
+        "specificity": 0.5446756425948592,
+        "predicted_positive_rate": 0.5575115023004601
+      },
+      "recalibrated_gate_on_heldout": {
+        "auroc": 0.7113301117854489,
+        "auprc": 0.566148047111475,
+        "brier": 0.20447783091873703,
+        "ece": 0.07635970633511623,
+        "threshold": 0.15676466065566827,
+        "precision": 0.3740526081141329,
+        "recall": 0.9693818601964183,
+        "specificity": 0.14075887392900857,
+        "predicted_positive_rate": 0.8973794758951791
+      },
+      "recalibrated_bins_on_heldout": [
+        {
+          "lower": 0.0,
+          "upper": 0.1,
+          "count": 258.0,
+          "mean_probability": 0.06335367015125408,
+          "empirical_rate": 0.09302325581395349
+        },
+        {
+          "lower": 0.1,
+          "upper": 0.2,
+          "count": 496.0,
+          "mean_probability": 0.15322631859360594,
+          "empirical_rate": 0.13709677419354838
+        },
+        {
+          "lower": 0.2,
+          "upper": 0.30000000000000004,
+          "count": 688.0,
+          "mean_probability": 0.2530775625235208,
+          "empirical_rate": 0.19767441860465115
+        },
+        {
+          "lower": 0.30000000000000004,
+          "upper": 0.4,
+          "count": 844.0,
+          "mean_probability": 0.3506846626237474,
+          "empirical_rate": 0.26540284360189575
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.5,
+          "count": 911.0,
+          "mean_probability": 0.45099564569415146,
+          "empirical_rate": 0.34906695938529086
+        },
+        {
+          "lower": 0.5,
+          "upper": 0.6000000000000001,
+          "count": 805.0,
+          "mean_probability": 0.5478639103358625,
+          "empirical_rate": 0.4372670807453416
+        },
+        {
+          "lower": 0.6000000000000001,
+          "upper": 0.7000000000000001,
+          "count": 642.0,
+          "mean_probability": 0.6478271454267333,
+          "empirical_rate": 0.559190031152648
+        },
+        {
+          "lower": 0.7000000000000001,
+          "upper": 0.8,
+          "count": 328.0,
+          "mean_probability": 0.7420373179247411,
+          "empirical_rate": 0.6920731707317073
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 27.0,
+          "mean_probability": 0.82254822651123,
+          "empirical_rate": 0.8518518518518519
+        },
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "count": 0.0,
+          "mean_probability": 0.0,
+          "empirical_rate": 0.0
+        }
+      ],
+      "preflight_only_policy_frozen": {
+        "open_rate": 0.5575115023004601,
+        "full_evidence": 0.6471294258851771,
+        "support_recall": 0.8081616323264653,
+        "graph_actions": 1.0458091618323664
+      },
+      "preflight_only_policy_recalibrated": {
+        "open_rate": 0.8973794758951791,
+        "full_evidence": 0.6645329065813163,
+        "support_recall": 0.8163632726545309,
+        "graph_actions": 1.6345269053810763
+      },
+      "scope_note": "Retrieval rows implement a preflight-only ablation by selecting between hybrid and the precomputed MRV-always trace. They do not replace the primary frozen two-stage-gate result."
+    },
+    "2wiki": {
+      "available_preflight_examples": 11160,
+      "calibration_queries": 200,
+      "heldout_test_queries": 10960,
+      "target_recall": 0.95,
+      "selected_recalibration_method": "platt",
+      "gate_target_reconstruction_matches_primary_evaluator": true,
+      "frozen_threshold": 0.4117030233341131,
+      "recalibrated_threshold": 0.1778392778658953,
+      "frozen_gate_on_heldout": {
+        "auroc": 0.7309914275441244,
+        "auprc": 0.7617962090224203,
+        "brier": 0.24658379702182548,
+        "ece": 0.16796272024876988,
+        "threshold": 0.4117030233341131,
+        "precision": 0.7359044225529239,
+        "recall": 0.5830288940551311,
+        "specificity": 0.7448359659781288,
+        "predicted_positive_rate": 0.4353102189781022
+      },
+      "recalibrated_gate_on_heldout": {
+        "auroc": 0.7309914275441244,
+        "auprc": 0.7617962090224203,
+        "brier": 0.2133870290303178,
+        "ece": 0.07561634894568413,
+        "threshold": 0.1778392778658953,
+        "precision": 0.5771183131589223,
+        "recall": 0.9817336433078712,
+        "specificity": 0.1227217496962333,
+        "predicted_positive_rate": 0.9346715328467153
+      },
+      "recalibrated_bins_on_heldout": [
+        {
+          "lower": 0.0,
+          "upper": 0.1,
+          "count": 217.0,
+          "mean_probability": 0.062024497626830384,
+          "empirical_rate": 0.08755760368663594
+        },
+        {
+          "lower": 0.1,
+          "upper": 0.2,
+          "count": 710.0,
+          "mean_probability": 0.1569986335329171,
+          "empirical_rate": 0.19577464788732393
+        },
+        {
+          "lower": 0.2,
+          "upper": 0.30000000000000004,
+          "count": 1238.0,
+          "mean_probability": 0.25279173584422154,
+          "empirical_rate": 0.33117932148626816
+        },
+        {
+          "lower": 0.30000000000000004,
+          "upper": 0.4,
+          "count": 1695.0,
+          "mean_probability": 0.35295491607795254,
+          "empirical_rate": 0.41238938053097346
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.5,
+          "count": 2049.0,
+          "mean_probability": 0.4519374952383553,
+          "empirical_rate": 0.5300146412884333
+        },
+        {
+          "lower": 0.5,
+          "upper": 0.6000000000000001,
+          "count": 2041.0,
+          "mean_probability": 0.5496246049518311,
+          "empirical_rate": 0.6286134247917687
+        },
+        {
+          "lower": 0.6000000000000001,
+          "upper": 0.7000000000000001,
+          "count": 1674.0,
+          "mean_probability": 0.6456241844788069,
+          "empirical_rate": 0.7347670250896058
+        },
+        {
+          "lower": 0.7000000000000001,
+          "upper": 0.8,
+          "count": 973.0,
+          "mean_probability": 0.7429736295054804,
+          "empirical_rate": 0.8396711202466598
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 340.0,
+          "mean_probability": 0.8373453339410707,
+          "empirical_rate": 0.9352941176470588
+        },
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "count": 23.0,
+          "mean_probability": 0.9168551426853765,
+          "empirical_rate": 0.9130434782608695
+        }
+      ],
+      "preflight_only_policy_frozen": {
+        "open_rate": 0.4353102189781022,
+        "full_evidence": 0.4112226277372263,
+        "support_recall": 0.70625,
+        "graph_actions": 0.8357664233576643
+      },
+      "preflight_only_policy_recalibrated": {
+        "open_rate": 0.9346715328467153,
+        "full_evidence": 0.45675182481751825,
+        "support_recall": 0.733257299270073,
+        "graph_actions": 1.740419708029197
+      },
+      "scope_note": "Retrieval rows implement a preflight-only ablation by selecting between hybrid and the precomputed MRV-always trace. They do not replace the primary frozen two-stage-gate result."
+    },
+    "musique": {
+      "available_preflight_examples": 1016,
+      "calibration_queries": 200,
+      "heldout_test_queries": 816,
+      "target_recall": 0.95,
+      "selected_recalibration_method": "platt",
+      "gate_target_reconstruction_matches_primary_evaluator": true,
+      "frozen_threshold": 0.44678119577007164,
+      "recalibrated_threshold": 0.2583973130922096,
+      "frozen_gate_on_heldout": {
+        "auroc": 0.6571141246748242,
+        "auprc": 0.6606431490837286,
+        "brier": 0.24065555197238014,
+        "ece": 0.08067074102052305,
+        "threshold": 0.44678119577007164,
+        "precision": 0.5338441890166028,
+        "recall": 0.9766355140186916,
+        "specificity": 0.059278350515463915,
+        "predicted_positive_rate": 0.9595588235294118
+      },
+      "recalibrated_gate_on_heldout": {
+        "auroc": 0.6571141246748242,
+        "auprc": 0.6606431490837286,
+        "brier": 0.23221595617470642,
+        "ece": 0.03607044396246408,
+        "threshold": 0.2583973130922096,
+        "precision": 0.5429326287978864,
+        "recall": 0.9602803738317757,
+        "specificity": 0.10824742268041238,
+        "predicted_positive_rate": 0.9276960784313726
+      },
+      "recalibrated_bins_on_heldout": [
+        {
+          "lower": 0.0,
+          "upper": 0.1,
+          "count": 2.0,
+          "mean_probability": 0.08958546857039723,
+          "empirical_rate": 0.0
+        },
+        {
+          "lower": 0.1,
+          "upper": 0.2,
+          "count": 20.0,
+          "mean_probability": 0.16676129132820386,
+          "empirical_rate": 0.3
+        },
+        {
+          "lower": 0.2,
+          "upper": 0.30000000000000004,
+          "count": 63.0,
+          "mean_probability": 0.25118403483406343,
+          "empirical_rate": 0.31746031746031744
+        },
+        {
+          "lower": 0.30000000000000004,
+          "upper": 0.4,
+          "count": 128.0,
+          "mean_probability": 0.35479122378486944,
+          "empirical_rate": 0.359375
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.5,
+          "count": 192.0,
+          "mean_probability": 0.4485184826964524,
+          "empirical_rate": 0.4947916666666667
+        },
+        {
+          "lower": 0.5,
+          "upper": 0.6000000000000001,
+          "count": 188.0,
+          "mean_probability": 0.5453501819330481,
+          "empirical_rate": 0.5691489361702128
+        },
+        {
+          "lower": 0.6000000000000001,
+          "upper": 0.7000000000000001,
+          "count": 154.0,
+          "mean_probability": 0.647899432004119,
+          "empirical_rate": 0.6818181818181818
+        },
+        {
+          "lower": 0.7000000000000001,
+          "upper": 0.8,
+          "count": 60.0,
+          "mean_probability": 0.74671617441776,
+          "empirical_rate": 0.7
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 9.0,
+          "mean_probability": 0.8269258829448766,
+          "empirical_rate": 0.7777777777777778
+        },
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "count": 0.0,
+          "mean_probability": 0.0,
+          "empirical_rate": 0.0
+        }
+      ],
+      "preflight_only_policy_frozen": {
+        "open_rate": 0.9595588235294118,
+        "full_evidence": 0.32107843137254904,
+        "support_recall": 0.6072303921568627,
+        "graph_actions": 2.8676470588235294
+      },
+      "preflight_only_policy_recalibrated": {
+        "open_rate": 0.9276960784313726,
+        "full_evidence": 0.32230392156862747,
+        "support_recall": 0.6098856209150327,
+        "graph_actions": 2.7720588235294117
+      },
+      "scope_note": "Retrieval rows implement a preflight-only ablation by selecting between hybrid and the precomputed MRV-always trace. They do not replace the primary frozen two-stage-gate result."
+    }
+  }
+}

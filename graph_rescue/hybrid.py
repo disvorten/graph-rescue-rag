@@ -32,6 +32,10 @@ class CachedEmbedder:
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.namespace = namespace.replace(":", "_").replace("/", "_")
+        self.cache_hits = 0
+        self.cache_misses = 0
+        self.delegate_batches = 0
+        self.cache_writes = 0
 
     def _path(self, key: str) -> Path:
         import hashlib
@@ -46,16 +50,22 @@ class CachedEmbedder:
         for index, text in enumerate(texts):
             path = self._path(text)
             if path.exists():
+                self.cache_hits += 1
                 rows[index] = np.asarray(
                     json.loads(path.read_text(encoding="utf-8")), dtype=np.float32
                 )
             else:
+                self.cache_misses += 1
                 missing_indices.append(index)
                 missing_texts.append(text)
 
-        batch_size = 32
+        # The 0.6B local encoder fits batches of 64 on the documented 8 GB
+        # evaluation GPU; this halves HTTP round trips during corpus indexing.
+        # Delegates remain free to split smaller internally if required.
+        batch_size = 64
         for start in range(0, len(missing_texts), batch_size):
             batch_texts = missing_texts[start : start + batch_size]
+            self.delegate_batches += 1
             batch_vectors = self.delegate.embed(batch_texts)
             for local_index, vector in enumerate(batch_vectors):
                 original_index = missing_indices[start + local_index]
@@ -63,9 +73,18 @@ class CachedEmbedder:
                 self._path(texts[original_index]).write_text(
                     json.dumps(vector.tolist()), encoding="utf-8"
                 )
+                self.cache_writes += 1
         if not rows:
             return np.empty((0, 0), dtype=np.float32)
         return np.vstack(rows)
+
+    def stats(self) -> dict[str, int]:
+        return {
+            "hits": self.cache_hits,
+            "misses": self.cache_misses,
+            "delegate_batches": self.delegate_batches,
+            "writes": self.cache_writes,
+        }
 
 
 class BM25Index:
@@ -86,31 +105,37 @@ class BM25Index:
         )
         self.avg_document_length = float(np.mean(self.document_lengths)) or 1.0
         document_frequency: Counter[str] = Counter()
-        for tokens in self.documents:
-            document_frequency.update(set(tokens))
+        self.postings: defaultdict[str, list[tuple[int, int]]] = defaultdict(list)
+        for document_index, frequencies in enumerate(self.term_frequencies):
+            # BM25 IDF uses the number of documents containing a term, not
+            # the total number of term occurrences across the collection.
+            document_frequency.update(frequencies.keys())
+            for term, frequency in frequencies.items():
+                self.postings[term].append((document_index, frequency))
         n = len(self.documents)
         self.idf = {
             term: math.log(1.0 + (n - count + 0.5) / (count + 0.5))
             for term, count in document_frequency.items()
         }
+        self.length_norm = self.k1 * (
+            1.0
+            - self.b
+            + self.b * self.document_lengths / self.avg_document_length
+        )
 
     def scores(self, query: str) -> np.ndarray:
         query_terms = tokenize(query)
         values = np.zeros(len(self.passages), dtype=np.float32)
-        for index, frequencies in enumerate(self.term_frequencies):
-            length_norm = self.k1 * (
-                1.0
-                - self.b
-                + self.b * self.document_lengths[index] / self.avg_document_length
-            )
-            score = 0.0
-            for term in query_terms:
-                frequency = frequencies.get(term, 0)
-                if frequency:
-                    score += self.idf.get(term, 0.0) * (
-                        frequency * (self.k1 + 1.0) / (frequency + length_norm)
-                    )
-            values[index] = score
+        # An inverted index is algebraically identical to scanning every
+        # document, but avoids an O(|corpus|) Python loop for each query term.
+        for term in query_terms:
+            term_idf = self.idf.get(term, 0.0)
+            for index, frequency in self.postings.get(term, ()):
+                values[index] += term_idf * (
+                    frequency
+                    * (self.k1 + 1.0)
+                    / (frequency + self.length_norm[index])
+                )
         return values
 
 
@@ -145,6 +170,24 @@ class HybridRetriever:
                 [f"query: {query}"]
             )[0]
         return self._query_embedding_cache[query]
+
+    def prime_uncached_query_embedding(self, query: str) -> float:
+        """Embed a novel online query while bypassing the persistent file cache.
+
+        Passage embeddings remain cached.  This method exists for latency
+        experiments where repeatedly reading an already encoded query from disk
+        would not represent production traffic.  The returned value is the
+        embedding-model latency in milliseconds.
+        """
+
+        import time
+
+        delegate = getattr(self.embedder, "delegate", self.embedder)
+        started = time.perf_counter()
+        self._query_embedding_cache[query] = delegate.embed(
+            [f"query: {query}"]
+        )[0]
+        return (time.perf_counter() - started) * 1000.0
 
     @staticmethod
     def _top_indices(scores: np.ndarray, k: int) -> list[int]:

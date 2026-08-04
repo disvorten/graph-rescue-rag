@@ -1,0 +1,134 @@
+diff --git a/src/hipporag/HippoRAG.py b/src/hipporag/HippoRAG.py
+--- a/src/hipporag/HippoRAG.py
++++ b/src/hipporag/HippoRAG.py
+@@ -122,8 +122,8 @@ class HippoRAG:
+         logger.debug(f"HippoRAG init with config:\n  {_print_config}\n")
+ 
+         #LLM and embedding model specific working directories are created under every specified saving directories
+-        llm_label = self.global_config.llm_name.replace("/", "_")
+-        embedding_label = self.global_config.embedding_model_name.replace("/", "_")
++        llm_label = self.global_config.llm_name.replace("/", "_").replace(":", "_")
++        embedding_label = self.global_config.embedding_model_name.replace("/", "_").replace(":", "_")
+         self.working_dir = os.path.join(self.global_config.save_dir, f"{llm_label}_{embedding_label}")
+ 
+         if not os.path.exists(self.working_dir):
+@@ -175,7 +175,8 @@ class HippoRAG:
+ 
+         self.prompt_template_manager = PromptTemplateManager(role_mapping={"system": "system", "user": "user", "assistant": "assistant"})
+ 
+-        self.openie_results_path = os.path.join(self.global_config.save_dir,f'openie_results_ner_{self.global_config.llm_name.replace("/", "_")}.json')
++        safe_llm_name = self.global_config.llm_name.replace("/", "_").replace(":", "_")
++        self.openie_results_path = os.path.join(self.global_config.save_dir,f'openie_results_ner_{safe_llm_name}.json')
+ 
+         self.rerank_filter = DSPyFilter(self)
+ 
+diff --git a/src/hipporag/StandardRAG.py b/src/hipporag/StandardRAG.py
+--- a/src/hipporag/StandardRAG.py
++++ b/src/hipporag/StandardRAG.py
+@@ -21,7 +21,8 @@ from .llm import _get_llm_class, BaseLLM
+ from .embedding_model import _get_embedding_model_class, BaseEmbeddingModel
+ from .embedding_store import EmbeddingStore, get_embedding_store
+ from .information_extraction import OpenIE
+-from .information_extraction.openie_vllm_offline import VLLMOfflineOpenIE
++# The vLLM offline extractor is unrelated to StandardRAG retrieval and is
++# intentionally not imported on Windows (vLLM is Linux-only).
+ from .evaluation.retrieval_eval import RetrievalRecall
+ from .evaluation.qa_eval import QAExactMatch, QAF1Score
+ from .prompts.linking import get_query_instruction
+@@ -74,8 +75,8 @@ class StandardRAG:
+         logger.debug(f"HippoRAG init with config:\n  {_print_config}\n")
+ 
+         #LLM and embedding model specific working directories are created under every specified saving directories
+-        llm_label = self.global_config.llm_name.replace("/", "_")
+-        embedding_label = self.global_config.embedding_model_name.replace("/", "_")
++        llm_label = self.global_config.llm_name.replace("/", "_").replace(":", "_")
++        embedding_label = self.global_config.embedding_model_name.replace("/", "_").replace(":", "_")
+         self.working_dir = os.path.join(self.global_config.save_dir, f"{llm_label}_{embedding_label}")
+ 
+         if not os.path.exists(self.working_dir):
+diff --git a/src/hipporag/embedding_model/__init__.py b/src/hipporag/embedding_model/__init__.py
+--- a/src/hipporag/embedding_model/__init__.py
++++ b/src/hipporag/embedding_model/__init__.py
+@@ -1,11 +1,4 @@
+-from .Contriever import ContrieverModel
+ from .base import EmbeddingConfig, BaseEmbeddingModel
+-from .GritLM import GritLMEmbeddingModel
+-from .NVEmbedV2 import NVEmbedV2EmbeddingModel
+-from .OpenAI import OpenAIEmbeddingModel
+-from .Cohere import CohereEmbeddingModel
+-from .Transformers import TransformersEmbeddingModel
+-from .VLLM import VLLMEmbeddingModel
+ 
+ from ..utils.logging_utils import get_logger
+ 
+@@ -14,17 +7,24 @@ logger = get_logger(__name__)
+ 
+ def _get_embedding_model_class(embedding_model_name: str = "nvidia/NV-Embed-v2"):
+     if "GritLM" in embedding_model_name:
++        from .GritLM import GritLMEmbeddingModel
+         return GritLMEmbeddingModel
+     elif "NV-Embed-v2" in embedding_model_name:
++        from .NVEmbedV2 import NVEmbedV2EmbeddingModel
+         return NVEmbedV2EmbeddingModel
+     elif "contriever" in embedding_model_name:
++        from .Contriever import ContrieverModel
+         return ContrieverModel
+     elif "text-embedding" in embedding_model_name:
++        from .OpenAI import OpenAIEmbeddingModel
+         return OpenAIEmbeddingModel
+     elif "cohere" in embedding_model_name:
++        from .Cohere import CohereEmbeddingModel
+         return CohereEmbeddingModel
+     elif embedding_model_name.startswith("Transformers/"):
++        from .Transformers import TransformersEmbeddingModel
+         return TransformersEmbeddingModel
+     elif embedding_model_name.startswith("VLLM/"):
++        from .VLLM import VLLMEmbeddingModel
+         return VLLMEmbeddingModel
+     raise ValueError(f"Unknown embedding model name: {embedding_model_name}")
+diff --git a/src/hipporag/llm/openai_gpt.py b/src/hipporag/llm/openai_gpt.py
+--- a/src/hipporag/llm/openai_gpt.py
++++ b/src/hipporag/llm/openai_gpt.py
+@@ -39,6 +39,9 @@ def cache_response(func):
+         model = kwargs.get("model", gen_params.get("model"))
+         seed = kwargs.get("seed", gen_params.get("seed"))
+         temperature = kwargs.get("temperature", gen_params.get("temperature"))
++        reasoning_effort = kwargs.get(
++            "reasoning_effort", gen_params.get("reasoning_effort")
++        )
+ 
+         # build key data, convert to JSON string and hash to generate key_hash
+         key_data = {
+@@ -46,6 +49,7 @@ def cache_response(func):
+             "model": model,
+             "seed": seed,
+             "temperature": temperature,
++            "reasoning_effort": reasoning_effort,
+         }
+         key_str = json.dumps(key_data, sort_keys=True, default=str)
+         key_hash = hashlib.sha256(key_str.encode("utf-8")).hexdigest()
+@@ -130,7 +134,8 @@ class CacheOpenAI(BaseLLM):
+ 
+         os.makedirs(self.cache_dir, exist_ok=True)
+         if cache_filename is None:
+-            cache_filename = f"{self.llm_name.replace('/', '_')}_cache.sqlite"
++            safe_llm_name = self.llm_name.replace('/', '_').replace(':', '_')
++            cache_filename = f"{safe_llm_name}_cache.sqlite"
+         self.cache_file_name = os.path.join(self.cache_dir, cache_filename)
+ 
+         self._init_llm_config()
+@@ -160,6 +165,14 @@ class CacheOpenAI(BaseLLM):
+                 "seed": config_dict.get("seed", 0),
+                 "temperature": config_dict.get("temperature", 0.0),
+             }
++        if self.llm_base_url.startswith(
++            ("http://127.0.0.1:11434", "http://localhost:11434")
++        ):
++            # Ollama's OpenAI-compatible API otherwise enables Qwen3 thinking
++            # by default. Recognition memory needs a short structured answer,
++            # so use the documented non-thinking mode and include it in the
++            # cache key above to prevent mixed-mode cache reuse.
++            config_dict['generate_params']["reasoning_effort"] = "none"
+ 
+         self.llm_config = LLMConfig.from_dict(config_dict=config_dict)
+         logger.debug(f"Init {self.__class__.__name__}'s llm_config: {self.llm_config}")

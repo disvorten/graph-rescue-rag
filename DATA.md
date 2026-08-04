@@ -77,3 +77,30 @@ files can contain benchmark text and are ignored by Git.
 The project never transfers the project code license to benchmark data,
 official evaluator code, model weights, or Ollama outputs. Keep upstream
 notices with any local copies.
+
+## Global development/distractor protocol
+
+`work/prepare_global_corpus_protocol.py` derives a second, leakage-controlled
+evaluation from the same authoritative files. It removes every official-dev
+question ID used by earlier pilots or the primary 1,000-query evaluation, then
+uses all remaining official-dev questions as an external test set. The
+searchable corpus contains every unique passage in the complete official
+development/distractor split plus the frozen 1,000-query training sample.
+
+This setting is larger and more realistic than the per-question pooled
+protocol, but it is not full-wiki retrieval. Graph construction reads passage
+titles and text only; answers, supporting-fact labels, decompositions, and
+evidence triples remain evaluation-only fields. Generated corpora, queries,
+graphs, and embedding caches remain ignored because they contain benchmark
+text.
+
+## Released HippoRAG benchmark artifact
+
+The exact-corpus comparison uses the corpus, questions, and precomputed OpenIE
+artifact released by the official HippoRAG repository:
+<https://github.com/OSU-NLP-Group/HippoRAG>. The local adapter records SHA-256
+hashes and converts identifiers without modifying text or relevance labels.
+The third-party repository, its generated artifacts, and model outputs are not
+redistributed by this project. Its MIT license applies to upstream code; this
+repository's Apache-2.0 license does not supersede that license or the dataset
+terms.

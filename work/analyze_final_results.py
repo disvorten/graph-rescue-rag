@@ -200,7 +200,6 @@ def paired_and_slice_analysis(
             item = {
                 "dataset": dataset,
                 "query_id": query_id,
-                "question": baseline.get("question", ""),
                 "question_type": baseline.get("question_type", ""),
                 "support_count": int(baseline.get("support_count", 0)),
                 "slice": baseline["slice"],

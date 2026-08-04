@@ -4,7 +4,7 @@
   "eval_queries_path": "../work/final_protocol/musique/eval.jsonl",
   "output_dir": "../outputs/final_v1/musique/qwen3_embedding/seed_101",
   "cache_dir": "../work/final_protocol/cache/qwen3_embedding",
-  "model_dir": "../work/final_protocol/musique/models/qwen3_embedding/seed_101",
+  "model_dir": "../work/final_protocol/musique/models/qwen3-embedding_0.6b/seed_101",
   "ollama": {
     "base_url": "http://127.0.0.1:11434",
     "embedding_model": "qwen3-embedding:0.6b",

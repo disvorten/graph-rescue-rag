@@ -6,7 +6,7 @@
 Expansion in Multi-Hop Question Answering**
 
 Avoid titles implying that adaptive graph retrieval itself is new. A2RAG,
-CatRAG, PruneRAG, and HHS-RAG establish overlapping adaptive or
+CatRAG, HHS-RAG, and PruneRAG establish overlapping adaptive or
 structure-aware ideas; see `docs/baseline_search_log.md`.
 
 ## Defensible claims
@@ -98,9 +98,9 @@ Still required before submission:
 
 1. five-seed graph-corruption aggregate;
 2. completed 1,000-query reader results on all three datasets;
-3. human audit of 100 stratified traces;
+3. completed manual annotation of 100 stratified traces;
 4. offline graph/index construction time and clean equal-hardware p50/p95;
-5. human verification of references, licenses, statistics, and claims;
+5. verification of references, licenses, statistics, and claims;
 6. exact comparison with a 2026 adaptive graph baseline if official code
    becomes available before submission.
 

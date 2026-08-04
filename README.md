@@ -92,28 +92,64 @@ token budget, and graph-action budget:
 | Graph Rescue / gated MRV | conditional local expansion | calibrated gate + evidence-conditioned marginal value | proposed method |
 | Oracle upper bound | gold-aware diagnostic only | best reachable evidence under the budget | headroom estimate, not a deployable baseline |
 
-### Efficiency of gating inside Graph Rescue
+### Broader frozen transfer
 
-The latency traces support a narrower efficiency claim than the quality
-results. Relative to the same MRV policy with graph expansion always enabled,
-the calibrated gate reduces graph actions and policy latency on all three
-datasets. Values are means over training seeds 101, 202, and 303, with 1,000
-evaluation questions per seed and `qwen3-embedding:0.6b`.
+A second protocol freezes the trained method and evaluates every remaining
+development query after a 200-query calibration partition. It covers 17,375
+unseen queries across substantially larger per-dataset corpora. This is a
+global-development transfer test, not a full-Wikipedia or official leaderboard
+setting.
 
-| Dataset | MRV always actions | Gated MRV actions | Action reduction | MRV always policy ms | Gated MRV policy ms | Policy-time reduction | Retrieval + policy reduction |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| HotpotQA | 1.958 | 1.652 | 15.6% | 37.53 | 31.79 | 15.3% | 3.6% |
-| 2WikiMultiHopQA | 1.976 | 1.565 | 20.8% | 47.51 | 36.51 | 23.1% | 8.1% |
-| MuSiQue | 2.992 | 2.616 | 12.6% | 77.13 | 66.48 | 13.8% | 4.7% |
+| Dataset | Queries | Corpus passages | Hybrid FE | Gated MRV FE | Difference | 95% paired CI |
+|---|---:|---:|---:|---:|---:|---:|
+| HotpotQA | 5,199 | 74,593 | 0.568 | **0.650** | +0.082 | [0.073, 0.091] |
+| 2WikiMultiHopQA | 11,160 | 58,432 | 0.324 | **0.397** | +0.073 | [0.068, 0.078] |
+| MuSiQue | 1,016 | 33,439 | 0.206 | **0.322** | +0.116 | [0.094, 0.140] |
 
-These measurements exclude offline graph/index construction and LLM answer
-generation. They demonstrate that gating makes the proposed MRV policy cheaper
-than always-on MRV; they do not establish lower end-to-end latency than an
-external GraphRAG implementation. The simpler KG²RAG-style control also has
-lower raw policy latency than gated MRV, while gated MRV gives higher
-full-evidence rates under the matched retrieval budget. Source values are in
-[`policy_metrics.csv`](outputs/final_v1/analysis/policy_metrics.csv) and
-[`comparison.csv`](outputs/published_baselines/comparison.csv).
+The retrieval gain transfers, but the gate's selectivity does not transfer
+cleanly. Recalibration on 200 target-domain queries improves rescue recall and
+expected calibration error, while often increasing the graph-open rate above
+0.89. This is reported as a limitation rather than hidden as a tuning detail.
+
+### Official-code external baseline
+
+The released HippoRAG MuSiQue corpus was evaluated on 1,000 unique query IDs
+with a common top-7 evidence metric. StandardRAG and HippoRAG use the official
+HippoRAG repository; its local Qwen3 recognition-memory call runs through the
+Ollama OpenAI-compatible endpoint with reasoning disabled. Graph Rescue uses
+the same 11,656 released passages through a separately validated adapter.
+
+| System | FE@7 | Support recall@7 | Median retrieval ms | p95 ms |
+|---|---:|---:|---:|---:|
+| StandardRAG, official code | 0.227 | 0.580 | 149.2 | 212.0 |
+| HippoRAG, official code | 0.269 | 0.605 | 3,727.5 | 5,171.2 |
+| Graph Rescue shared hybrid | 0.229 | 0.571 | 37.5 | 57.4 |
+| Graph Rescue gated MRV | **0.366** | **0.643** | 103.3 | 145.9 |
+
+The paired FE@7 difference between gated MRV and official HippoRAG is +0.097
+(95% CI [0.071, 0.125]). The external gate opens on 99.8% of these queries, so
+this run supports the retrieval-quality claim but not a cross-system
+selectivity claim. Latencies are implementation-specific and are not treated
+as hardware-normalized speed rankings.
+
+### Clean latency of the gate
+
+The efficiency question is isolated in a repeated benchmark: 200 queries per
+dataset, three repetitions, warmed models, and paired per-query means. Relative
+to the same MRV policy with graph expansion always enabled, the gate saves
+graph actions and 6.5--12.0 ms of mean online retrieval time.
+
+| Dataset | Hybrid p50 ms | Always-MRV p50 ms | Gated-MRV p50 ms | Gated p95 ms | Mean gated − always ms (95% CI) | Actions always → gated |
+|---|---:|---:|---:|---:|---:|---:|
+| HotpotQA | 179.1 | 212.2 | 208.2 | 284.7 | -6.6 [-8.2, -5.0] | 1.95 → 1.58 |
+| 2WikiMultiHopQA | 178.1 | 220.8 | 201.6 | 265.1 | -12.0 [-15.1, -9.1] | 1.97 → 1.50 |
+| MuSiQue | 220.1 | 288.5 | 282.8 | 363.5 | -6.5 [-8.9, -4.3] | 3.00 → 2.77 |
+
+These measurements exclude offline graph/index construction and answer
+generation. They show a modest saving versus always-on MRV inside this system;
+they do not establish that Graph Rescue is faster than a complete external
+GraphRAG lifecycle. Machine-readable source values and provenance are in
+[`outputs/extended_validation_v1/`](outputs/extended_validation_v1/).
 
 ### Downstream reader results
 
@@ -170,9 +206,7 @@ corpora, and per-query reader generations. See:
 - [docs/baseline_search_log.md](docs/baseline_search_log.md) for the
   comparison/code-availability audit and current novelty boundary;
 - [docs/russian_manuscript_plan.md](docs/russian_manuscript_plan.md) for the
-  human-authored Russian journal route and section-level evidence checklist;
-- [docs/presubmission_query_ru.template.md](docs/presubmission_query_ru.template.md)
-  for a transparent scope/preprint/AI-policy query to a Russian journal;
+  Russian-language manuscript outline;
 - [docs/habr_announcement_plan_ru.md](docs/habr_announcement_plan_ru.md) for a
   non-hype Russian technical launch post focused on reproduction;
 - [outputs/REPRODUCIBILITY_MANIFEST.md](outputs/REPRODUCIBILITY_MANIFEST.md)
@@ -180,7 +214,7 @@ corpora, and per-query reader generations. See:
 - [outputs/FINAL_EXPERIMENT_REPORT_RU.md](outputs/FINAL_EXPERIMENT_REPORT_RU.md)
   for the detailed Russian-language report.
 - [outputs/PUBLICATION_AND_GITHUB_STRATEGY_RU_v2.md](outputs/PUBLICATION_AND_GITHUB_STRATEGY_RU_v2.md)
-  for the current Russian-journal decision gate and GitHub dissemination plan.
+  for the JIIS submission route and GitHub dissemination plan.
 
 Compact analysis tables and figures are included under
 `outputs/final_v1/analysis/`. Full manuscript drafts are intentionally kept out
@@ -196,6 +230,7 @@ examples/                      demo and frozen experiment configs
 work/*.py                      preparation, execution, and analysis entry points
 outputs/final_v1/analysis/     compact aggregate results
 outputs/published_baselines/   equal-budget published-pattern comparison
+outputs/extended_validation_v1/ portable global, official-code, and latency summary
 ```
 
 ## Limits and responsible reporting
@@ -206,6 +241,9 @@ outputs/published_baselines/   equal-budget published-pattern comparison
   downstream validation, not a substitute for stronger-model evaluation.
 - The graph is source-grounded and constructed without gold supporting-fact
   labels, but the protocol remains benchmark-specific.
+- Retrieval gains transfer to broader corpora, but gate selectivity can fail
+  under domain/protocol shift; target recalibration often opens the graph for
+  most queries.
 - Hardware-normalized construction cost and independent reproduction remain
   desirable before a strong archival claim.
 

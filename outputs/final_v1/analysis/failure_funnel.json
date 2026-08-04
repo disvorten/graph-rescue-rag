@@ -1,0 +1,154 @@
+{
+  "definition": {
+    "already_solved": "Hybrid context already contains all support.",
+    "anchor_failure": "Initial seeds contain no supporting passage.",
+    "rescuable": "Missing support is reachable from an initial support anchor.",
+    "unreachable": "The clean graph has no admissible path to complete support."
+  },
+  "rows": [
+    {
+      "dataset": "hotpot",
+      "slice": "already_solved",
+      "queries": 640,
+      "share": 0.64,
+      "wins": 0,
+      "losses": 28,
+      "ties": 612,
+      "win_rate": 0.0,
+      "loss_rate": 0.04375,
+      "mean_support_recall_delta": -0.02265625
+    },
+    {
+      "dataset": "hotpot",
+      "slice": "anchor_failure",
+      "queries": 37,
+      "share": 0.037,
+      "wins": 3,
+      "losses": 5,
+      "ties": 29,
+      "win_rate": 0.08108108108108109,
+      "loss_rate": 0.13513513513513514,
+      "mean_support_recall_delta": -0.02702702702702703
+    },
+    {
+      "dataset": "hotpot",
+      "slice": "rescuable",
+      "queries": 278,
+      "share": 0.278,
+      "wins": 196,
+      "losses": 0,
+      "ties": 82,
+      "win_rate": 0.7050359712230215,
+      "loss_rate": 0.0,
+      "mean_support_recall_delta": 0.35251798561151076
+    },
+    {
+      "dataset": "hotpot",
+      "slice": "unreachable",
+      "queries": 45,
+      "share": 0.045,
+      "wins": 0,
+      "losses": 0,
+      "ties": 45,
+      "win_rate": 0.0,
+      "loss_rate": 0.0,
+      "mean_support_recall_delta": 0.0
+    },
+    {
+      "dataset": "2wiki",
+      "slice": "already_solved",
+      "queries": 367,
+      "share": 0.367,
+      "wins": 0,
+      "losses": 10,
+      "ties": 357,
+      "win_rate": 0.0,
+      "loss_rate": 0.027247956403269755,
+      "mean_support_recall_delta": -0.013623978201634877
+    },
+    {
+      "dataset": "2wiki",
+      "slice": "anchor_failure",
+      "queries": 16,
+      "share": 0.016,
+      "wins": 0,
+      "losses": 4,
+      "ties": 12,
+      "win_rate": 0.0,
+      "loss_rate": 0.25,
+      "mean_support_recall_delta": -0.125
+    },
+    {
+      "dataset": "2wiki",
+      "slice": "rescuable",
+      "queries": 596,
+      "share": 0.596,
+      "wins": 328,
+      "losses": 5,
+      "ties": 263,
+      "win_rate": 0.5503355704697986,
+      "loss_rate": 0.008389261744966443,
+      "mean_support_recall_delta": 0.22441275167785235
+    },
+    {
+      "dataset": "2wiki",
+      "slice": "unreachable",
+      "queries": 21,
+      "share": 0.021,
+      "wins": 0,
+      "losses": 0,
+      "ties": 21,
+      "win_rate": 0.0,
+      "loss_rate": 0.0,
+      "mean_support_recall_delta": 0.0
+    },
+    {
+      "dataset": "musique",
+      "slice": "already_solved",
+      "queries": 156,
+      "share": 0.156,
+      "wins": 0,
+      "losses": 20,
+      "ties": 136,
+      "win_rate": 0.0,
+      "loss_rate": 0.1282051282051282,
+      "mean_support_recall_delta": -0.05876068376068377
+    },
+    {
+      "dataset": "musique",
+      "slice": "anchor_failure",
+      "queries": 226,
+      "share": 0.226,
+      "wins": 13,
+      "losses": 31,
+      "ties": 182,
+      "win_rate": 0.05752212389380531,
+      "loss_rate": 0.13716814159292035,
+      "mean_support_recall_delta": -0.02765486725663717
+    },
+    {
+      "dataset": "musique",
+      "slice": "rescuable",
+      "queries": 395,
+      "share": 0.395,
+      "wins": 151,
+      "losses": 14,
+      "ties": 230,
+      "win_rate": 0.3822784810126582,
+      "loss_rate": 0.035443037974683546,
+      "mean_support_recall_delta": 0.1529535864978903
+    },
+    {
+      "dataset": "musique",
+      "slice": "unreachable",
+      "queries": 223,
+      "share": 0.223,
+      "wins": 0,
+      "losses": 16,
+      "ties": 207,
+      "win_rate": 0.0,
+      "loss_rate": 0.07174887892376682,
+      "mean_support_recall_delta": -0.020926756352765318
+    }
+  ]
+}

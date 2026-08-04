@@ -135,13 +135,25 @@ def main() -> None:
         warnings.append("Document is unexpectedly short for the intended theory paper.")
     if "\ufffd" in body_text:
         failures.append("Replacement character U+FFFD found.")
-    for required in (
+    required_text = [
         "21.4. KG²RAG-style baseline при равном бюджете",
         "0.743",
         "0.494",
         "0.202",
-        "Версия 5.0",
-    ):
+    ]
+    if "v6" in docx_path.stem.lower():
+        required_text.extend(
+            [
+                "Версия 6.0",
+                "27. Перенос на ранее не виденные official-dev запросы",
+                "29. Официальный код HippoRAG на released MuSiQue",
+                "0.366",
+                "99.8%",
+            ]
+        )
+    else:
+        required_text.append("Версия 5.0")
+    for required in required_text:
         if required not in body_text:
             failures.append(f"Required final text is missing: {required}")
     for obsolete in (

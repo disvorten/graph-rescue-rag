@@ -37,6 +37,7 @@ from .official_metrics import (
     support_fact_scores,
 )
 from .policy import PolicyConfig, RescuePolicy
+from .profiling import process_rss_bytes
 from .reader import AnswerPresenceReader, OllamaReader
 from .report import write_experiment_report
 from .text import estimate_tokens
@@ -51,13 +52,17 @@ class Experiment:
         allow_hashing_fallback: bool = False,
     ):
         self.config = config
+        initialization_started = time.perf_counter()
+        stage_started = initialization_started
         self.passages_list = load_passages(config.corpus_path)
+        corpus_loaded = time.perf_counter()
         self.passages: dict[str, Passage] = {
             item.id: item for item in self.passages_list
         }
         self.train_queries = load_queries(config.train_queries_path)
         self.eval_queries = load_queries(config.eval_queries_path)
         self._validate_support_ids(self.train_queries + self.eval_queries)
+        queries_loaded = time.perf_counter()
         embedder = make_embedder(
             base_url=config.ollama.base_url,
             model=config.ollama.embedding_model,
@@ -65,6 +70,7 @@ class Experiment:
             cache_dir=config.cache_dir,
             allow_hashing_fallback=allow_hashing_fallback,
         )
+        embedder_ready = time.perf_counter()
         self.retriever = HybridRetriever(
             self.passages_list,
             embedder,
@@ -72,6 +78,10 @@ class Experiment:
             dense_k=config.retrieval.dense_k,
             rrf_k=config.retrieval.rrf_k,
             rerank_k=config.retrieval.rerank_k,
+        )
+        retriever_ready = time.perf_counter()
+        embedding_cache_stats = (
+            embedder.stats() if hasattr(embedder, "stats") else None
         )
         self.graph = KnowledgeGraph.build(
             self.passages_list,
@@ -88,11 +98,24 @@ class Experiment:
                 false_edge_ratio=config.graph.false_edge_ratio,
                 seed=config.graph.corruption_seed,
             )
+        graph_ready = time.perf_counter()
         self.extractor = CandidateFeatureExtractor(
             passages=self.passages,
             retriever=self.retriever,
             token_budget=config.retrieval.evidence_token_budget,
         )
+        extractor_ready = time.perf_counter()
+        self.initialization_profile = {
+            "corpus_load_ms": (corpus_loaded - stage_started) * 1000.0,
+            "query_load_validate_ms": (queries_loaded - corpus_loaded) * 1000.0,
+            "embedder_connect_ms": (embedder_ready - queries_loaded) * 1000.0,
+            "retriever_index_ms": (retriever_ready - embedder_ready) * 1000.0,
+            "embedding_cache": embedding_cache_stats,
+            "graph_build_ms": (graph_ready - retriever_ready) * 1000.0,
+            "feature_extractor_ms": (extractor_ready - graph_ready) * 1000.0,
+            "total_ms": (extractor_ready - initialization_started) * 1000.0,
+            "process_rss_bytes_after_init": process_rss_bytes(),
+        }
 
     def _validate_support_ids(self, queries: list[QueryExample]) -> None:
         known = set(self.passages)
@@ -119,6 +142,7 @@ class Experiment:
             "train_queries": len(self.train_queries),
             "eval_queries": len(self.eval_queries),
             "graph": asdict(self.graph.stats),
+            "initialization_profile": self.initialization_profile,
         }
 
     def train(self) -> tuple[MRVModel, GateModel, GateModel, TrainingSummary]:
@@ -308,12 +332,27 @@ class Experiment:
             path.name: hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sorted(package_dir.glob("*.py"))
         }
+        input_paths = {
+            "corpus": self.config.corpus_path,
+            "train_queries": self.config.train_queries_path,
+            "eval_queries": self.config.eval_queries_path,
+            "model_dir": self.config.model_dir,
+        }
+        if self.config.learning.counterfactual_labels_path:
+            input_paths["counterfactual_labels"] = (
+                self.config.learning.counterfactual_labels_path
+            )
+        input_hashes = {
+            name: self._content_hash(Path(value))
+            for name, value in input_paths.items()
+        }
         payload = {
-            "schema_version": 1,
+            "schema_version": 2,
             "config": asdict(self.config),
             "eval_query_ids": [item.id for item in self.eval_queries],
             "policies": policy_names,
             "source_hashes": source_hashes,
+            "input_hashes": input_hashes,
         }
         return hashlib.sha256(
             json.dumps(
@@ -323,6 +362,23 @@ class Experiment:
                 separators=(",", ":"),
             ).encode("utf-8")
         ).hexdigest()
+
+    @staticmethod
+    def _content_hash(path: Path) -> str:
+        """Hash a required file or a directory tree deterministically."""
+
+        if path.is_file():
+            return hashlib.sha256(path.read_bytes()).hexdigest()
+        if path.is_dir():
+            digest = hashlib.sha256()
+            files = sorted(item for item in path.rglob("*") if item.is_file())
+            for item in files:
+                relative = item.relative_to(path).as_posix().encode("utf-8")
+                digest.update(relative)
+                digest.update(b"\0")
+                digest.update(hashlib.sha256(item.read_bytes()).digest())
+            return digest.hexdigest()
+        raise FileNotFoundError(f"Fingerprint input does not exist: {path}")
 
     @staticmethod
     def _load_evaluation_checkpoint(
@@ -873,6 +929,7 @@ class Experiment:
         summary = {
             "config": asdict(self.config),
             "graph": asdict(self.graph.stats),
+            "initialization_profile": self.initialization_profile,
             "aggregate": aggregate,
             "comparisons": comparisons,
             "factorial_interactions": interactions,

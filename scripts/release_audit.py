@@ -36,6 +36,7 @@ SECRET_PATTERNS = {
     "AWS access key": re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
     "private key": re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
 }
+LOCAL_WINDOWS_PATH = re.compile(r"[A-Za-z]:\\Users\\[^\\\r\n]+", re.IGNORECASE)
 TEXT_SUFFIXES = {
     ".cff",
     ".csv",
@@ -62,19 +63,26 @@ def run(*args: str) -> subprocess.CompletedProcess[str]:
     )
 
 
-def tracked_files() -> list[Path]:
+def public_snapshot_files() -> list[Path]:
     result = run(
         "git",
         "-c",
         f"safe.directory={ROOT.as_posix()}",
         "ls-files",
+        "--cached",
+        "--others",
+        "--exclude-standard",
     )
     if result.returncode:
         raise RuntimeError(
             "Git repository is not initialized or git ls-files failed:\n"
             + result.stderr.strip()
         )
-    return [ROOT / line for line in result.stdout.splitlines() if line.strip()]
+    return [
+        ROOT / line
+        for line in result.stdout.splitlines()
+        if line.strip() and (ROOT / line).exists()
+    ]
 
 
 def audit_files(files: list[Path]) -> list[str]:
@@ -91,9 +99,6 @@ def audit_files(files: list[Path]) -> list[str]:
         rel = path.relative_to(ROOT)
         rel_text = rel.as_posix()
         parts = {part.lower() for part in rel.parts}
-        if not path.exists():
-            errors.append(f"tracked path does not exist: {rel_text}")
-            continue
         if path.stat().st_size > MAX_BYTES:
             errors.append(
                 f"tracked file exceeds {MAX_BYTES // (1024 * 1024)} MiB: "
@@ -106,6 +111,14 @@ def audit_files(files: list[Path]) -> list[str]:
         if path.suffix.lower() not in TEXT_SUFFIXES or path.stat().st_size > 5_000_000:
             continue
         text = path.read_text(encoding="utf-8", errors="replace")
+        if LOCAL_WINDOWS_PATH.search(text):
+            errors.append(f"local Windows user path in public file: {rel_text}")
+        if rel.parts and rel.parts[0] == "outputs":
+            if re.search(r'(?m)^\s*"question"\s*:', text):
+                errors.append(f"benchmark question text field in public output: {rel_text}")
+            first_line = text.splitlines()[0] if text.splitlines() else ""
+            if re.search(r"(?:^|,)question(?:,|$)", first_line):
+                errors.append(f"benchmark question CSV column in public output: {rel_text}")
         for label, pattern in SECRET_PATTERNS.items():
             if pattern.search(text):
                 errors.append(f"possible {label} in {rel_text}")
@@ -114,7 +127,7 @@ def audit_files(files: list[Path]) -> list[str]:
 
 def main() -> int:
     try:
-        files = tracked_files()
+        files = public_snapshot_files()
     except RuntimeError as exc:
         print(f"FAIL: {exc}")
         return 1
@@ -139,7 +152,7 @@ def main() -> int:
             print(tests.stderr)
         return 1
 
-    print(f"RELEASE AUDIT: PASS ({len(files)} tracked files)")
+    print(f"RELEASE AUDIT: PASS ({len(files)} public-snapshot files)")
     print("Test suite: PASS")
     return 0
 

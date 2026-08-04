@@ -1,0 +1,48 @@
+{
+  "corpus_path": "../work/global_corpus_protocol/hotpot/corpus.jsonl",
+  "train_queries_path": "../work/global_corpus_protocol/hotpot/train.jsonl",
+  "eval_queries_path": "../work/global_corpus_protocol/hotpot/eval.jsonl",
+  "output_dir": "../outputs/global_v1/hotpot/frozen_seed_101",
+  "cache_dir": "../work/final_protocol/cache/qwen3_embedding",
+  "model_dir": "../work/final_protocol/hotpot/models/qwen3-embedding_0.6b/seed_101",
+  "ollama": {
+    "base_url": "http://127.0.0.1:11434",
+    "embedding_model": "qwen3-embedding:0.6b",
+    "generation_model": "qwen3:8b",
+    "timeout_seconds": 600,
+    "reader_policies": []
+  },
+  "retrieval": {
+    "bm25_k": 150,
+    "dense_k": 150,
+    "rrf_k": 60,
+    "rerank_k": 80,
+    "seed_k": 2,
+    "final_k": 5,
+    "evidence_token_budget": 1800
+  },
+  "graph": {
+    "max_hops": 2,
+    "frontier_cap": 160,
+    "max_actions": 2,
+    "min_entity_df": 2,
+    "max_entity_df_ratio": 0.03,
+    "entity_mode": "provided",
+    "corruption_seed": 101
+  },
+  "learning": {
+    "reader_gain_weight": 0.50,
+    "token_cost_weight": 0.05,
+    "hop_cost_weight": 0.04,
+    "noise_cost_weight": 0.08,
+    "random_seed": 101
+  },
+  "evaluation": {
+    "include_classic_baselines": false,
+    "include_oracle_upper_bound": false,
+    "bootstrap_samples": 5000,
+    "latency_percentiles": [0.5, 0.95],
+    "resume_checkpoint": true,
+    "progress_every": 25
+  }
+}

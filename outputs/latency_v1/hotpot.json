@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "measurement_scope": "Online retrieval only: fresh query embedding, BM25+dense+fusion+reranking, and policy/graph traversal. Answer generation excluded.",
+  "config": "examples/final_hotpot_qwen_config.json",
+  "cache_state_at_initialization": "warm",
+  "queries": 200,
+  "warmup_queries_excluded": 20,
+  "repetitions": 3,
+  "randomized_query_and_policy_order": true,
+  "fresh_query_embedding_each_repetition": true,
+  "paired_inference_unit": "query; repetitions are averaged within query before bootstrap",
+  "initialization_profile": {
+    "corpus_load_ms": 197.83970003481954,
+    "query_load_validate_ms": 16.896599961910397,
+    "embedder_connect_ms": 33.37620000820607,
+    "retriever_index_ms": 7612.598100036848,
+    "embedding_cache": {
+      "hits": 19189,
+      "misses": 0,
+      "delegate_batches": 0,
+      "writes": 0
+    },
+    "graph_build_ms": 1119.3892000010237,
+    "feature_extractor_ms": 0.006699992809444666,
+    "total_ms": 8980.106500035618,
+    "process_rss_bytes_after_init": 487329792
+  },
+  "resource_snapshot": {
+    "process_rss_bytes": 492793856,
+    "cache_directory_bytes": 4313865788,
+    "model_directory_bytes": 12633
+  },
+  "environment": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "python": "3.12.13 (main, Mar  3 2026, 15:01:35) [MSC v.1944 64 bit (AMD64)]",
+    "logical_cpu_count": 20,
+    "embedding_model": "qwen3-embedding:0.6b"
+  },
+  "aggregate": {
+    "hybrid": {
+      "retrieval_latency": {
+        "count": 600,
+        "mean_ms": 186.15669299984197,
+        "median_ms": 179.03994998778217,
+        "p95_ms": 256.14469005085994,
+        "min_ms": 113.42890001833439,
+        "max_ms": 304.51310001080856
+      },
+      "policy_latency": {
+        "count": 600,
+        "mean_ms": 0.009409499471075833,
+        "median_ms": 0.008000002708286047,
+        "p95_ms": 0.015004997840151186,
+        "min_ms": 0.005099980626255274,
+        "max_ms": 0.027999980375170708
+      },
+      "online_total_latency": {
+        "count": 600,
+        "mean_ms": 186.16610249931304,
+        "median_ms": 179.0529999998398,
+        "p95_ms": 256.15679002949037,
+        "min_ms": 113.44460002146661,
+        "max_ms": 304.52170001808554
+      },
+      "query_embedding_latency": {
+        "count": 600,
+        "mean_ms": 152.18439666864774,
+        "median_ms": 141.16319999448024,
+        "p95_ms": 207.3493199801305,
+        "min_ms": 99.0192000172101,
+        "max_ms": 263.2386999903247
+      },
+      "mean_graph_reads": 0.0,
+      "mean_candidate_paths_scored": 0.0,
+      "mean_graph_actions": 0.0,
+      "full_evidence": 0.625,
+      "support_recall": 0.8125
+    },
+    "kg2rag_style_equal_budget": {
+      "retrieval_latency": {
+        "count": 600,
+        "mean_ms": 186.15669299984197,
+        "median_ms": 179.03994998778217,
+        "p95_ms": 256.14469005085994,
+        "min_ms": 113.42890001833439,
+        "max_ms": 304.51310001080856
+      },
+      "policy_latency": {
+        "count": 600,
+        "mean_ms": 13.044853500614408,
+        "median_ms": 13.180000009015203,
+        "p95_ms": 17.854044973501004,
+        "min_ms": 4.004999995231628,
+        "max_ms": 20.51280002342537
+      },
+      "online_total_latency": {
+        "count": 600,
+        "mean_ms": 199.20154650045637,
+        "median_ms": 192.2570999886375,
+        "p95_ms": 267.996065018815,
+        "min_ms": 128.06940003065392,
+        "max_ms": 315.8902999712154
+      },
+      "query_embedding_latency": {
+        "count": 600,
+        "mean_ms": 152.18439666864774,
+        "median_ms": 141.16319999448024,
+        "p95_ms": 207.3493199801305,
+        "min_ms": 99.0192000172101,
+        "max_ms": 263.2386999903247
+      },
+      "mean_graph_reads": 2154.11,
+      "mean_candidate_paths_scored": 143.115,
+      "mean_graph_actions": 2.0,
+      "full_evidence": 0.705,
+      "support_recall": 0.845
+    },
+    "mrv_always": {
+      "retrieval_latency": {
+        "count": 600,
+        "mean_ms": 186.15669299984197,
+        "median_ms": 179.03994998778217,
+        "p95_ms": 256.14469005085994,
+        "min_ms": 113.42890001833439,
+        "max_ms": 304.51310001080856
+      },
+      "policy_latency": {
+        "count": 600,
+        "mean_ms": 32.69309816610379,
+        "median_ms": 31.711199990240857,
+        "p95_ms": 42.31170004350132,
+        "min_ms": 10.356699989642948,
+        "max_ms": 168.86679996969178
+      },
+      "online_total_latency": {
+        "count": 600,
+        "mean_ms": 218.84979116594573,
+        "median_ms": 212.23255002405494,
+        "p95_ms": 288.3430199552094,
+        "min_ms": 149.15359998121858,
+        "max_ms": 402.1101999678649
+      },
+      "query_embedding_latency": {
+        "count": 600,
+        "mean_ms": 152.18439666864774,
+        "median_ms": 141.16319999448024,
+        "p95_ms": 207.3493199801305,
+        "min_ms": 99.0192000172101,
+        "max_ms": 263.2386999903247
+      },
+      "mean_graph_reads": 5827.93,
+      "mean_candidate_paths_scored": 317.565,
+      "mean_graph_actions": 1.945,
+      "full_evidence": 0.795,
+      "support_recall": 0.885
+    },
+    "mrv_gated": {
+      "retrieval_latency": {
+        "count": 600,
+        "mean_ms": 186.15669299984197,
+        "median_ms": 179.03994998778217,
+        "p95_ms": 256.14469005085994,
+        "min_ms": 113.42890001833439,
+        "max_ms": 304.51310001080856
+      },
+      "policy_latency": {
+        "count": 600,
+        "mean_ms": 26.116455165611114,
+        "median_ms": 28.987950005102903,
+        "p95_ms": 42.12769000150728,
+        "min_ms": 0.15850004274398088,
+        "max_ms": 61.61299999803305
+      },
+      "online_total_latency": {
+        "count": 600,
+        "mean_ms": 212.27314816545308,
+        "median_ms": 208.2022999820765,
+        "p95_ms": 284.7096350189531,
+        "min_ms": 125.66660006996244,
+        "max_ms": 358.1373000051826
+      },
+      "query_embedding_latency": {
+        "count": 600,
+        "mean_ms": 152.18439666864774,
+        "median_ms": 141.16319999448024,
+        "p95_ms": 207.3493199801305,
+        "min_ms": 99.0192000172101,
+        "max_ms": 263.2386999903247
+      },
+      "mean_graph_reads": 4863.685,
+      "mean_candidate_paths_scored": 255.165,
+      "mean_graph_actions": 1.585,
+      "full_evidence": 0.8,
+      "support_recall": 0.89
+    }
+  },
+  "paired_latency_comparisons": {
+    "kg2rag_style_equal_budget_minus_hybrid_online_total_ms": {
+      "difference": 13.035444001143333,
+      "ci95_low": 12.613508626942346,
+      "ci95_high": 13.43525503895459,
+      "p_value_two_sided": 0.0
+    },
+    "mrv_always_minus_hybrid_online_total_ms": {
+      "difference": 32.68368866663271,
+      "ci95_low": 31.5722120625384,
+      "ci95_high": 33.90967237040605,
+      "p_value_two_sided": 0.0
+    },
+    "mrv_gated_minus_hybrid_online_total_ms": {
+      "difference": 26.10704566614004,
+      "ci95_low": 24.462305316965892,
+      "ci95_high": 27.709650375654743,
+      "p_value_two_sided": 0.0
+    },
+    "mrv_gated_minus_mrv_always_online_total_ms": {
+      "difference": -6.57664300049267,
+      "ci95_low": -8.183003232782843,
+      "ci95_high": -5.03804038408513,
+      "p_value_two_sided": 0.0
+    },
+    "mrv_gated_minus_mrv_always_policy_ms": {
+      "difference": -6.5766430004926715,
+      "ci95_low": -8.183003232782843,
+      "ci95_high": -5.038040384085132,
+      "p_value_two_sided": 0.0
+    },
+    "mrv_gated_minus_mrv_always_graph_actions": {
+      "difference": -0.36,
+      "ci95_low": -0.44,
+      "ci95_high": -0.28,
+      "p_value_two_sided": 0.0
+    }
+  },
+  "raw_records": "outputs/latency_v1/hotpot_raw.jsonl"
+}

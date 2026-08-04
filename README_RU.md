@@ -84,29 +84,64 @@ KG²RAG-style — независимая равнобюджетная адапт
 | Graph Rescue / gated MRV | условное локальное расширение | calibrated gate + marginal value относительно текущего evidence | предлагаемый метод |
 | Oracle upper bound | только gold-aware диагностика | лучшее достижимое evidence при том же budget | оценка резерва, не deployable baseline |
 
-### Вычислительная эффективность gate внутри Graph Rescue
+### Расширенная проверка переноса
 
-Latency-прогоны подтверждают более узкий вывод, чем эксперименты по качеству.
-По сравнению с той же MRV-политикой, в которой расширение графа запускается
-всегда, калиброванный gate уменьшает число graph actions и время graph-policy
-на всех трёх датасетах. Ниже приведены средние значения по seed обучения 101,
-202 и 303; каждый seed оценивался на 1 000 вопросах с
-`qwen3-embedding:0.6b`.
+Во втором протоколе обученный метод фиксируется и оценивается на всех оставшихся
+development-вопросах после выделения 200 вопросов для калибровки. Всего это
+17 375 ранее не использованных запросов и существенно более крупный локальный
+корпус для каждого датасета. Это global-development transfer, а не full-Wikipedia
+или официальный leaderboard-протокол.
 
-| Датасет | MRV always actions | Gated MRV actions | Снижение actions | MRV always policy, мс | Gated MRV policy, мс | Снижение policy time | Снижение retrieval + policy |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| HotpotQA | 1.958 | 1.652 | 15.6% | 37.53 | 31.79 | 15.3% | 3.6% |
-| 2WikiMultiHopQA | 1.976 | 1.565 | 20.8% | 47.51 | 36.51 | 23.1% | 8.1% |
-| MuSiQue | 2.992 | 2.616 | 12.6% | 77.13 | 66.48 | 13.8% | 4.7% |
+| Датасет | Запросы | Passages | Hybrid FE | Gated MRV FE | Разница | 95% paired CI |
+|---|---:|---:|---:|---:|---:|---:|
+| HotpotQA | 5 199 | 74 593 | 0.568 | **0.650** | +0.082 | [0.073; 0.091] |
+| 2WikiMultiHopQA | 11 160 | 58 432 | 0.324 | **0.397** | +0.073 | [0.068; 0.078] |
+| MuSiQue | 1 016 | 33 439 | 0.206 | **0.322** | +0.116 | [0.094; 0.140] |
 
-Эти измерения не включают offline-построение графа/индекса и генерацию ответа
-LLM. Они показывают, что gate делает предлагаемую MRV-политику дешевле её
-always-on варианта, но не доказывают меньшую end-to-end latency относительно
-внешней реализации GraphRAG. Упрощённый KG²RAG-style control также имеет
-меньшую raw policy latency, чем gated MRV, однако gated MRV даёт более высокий
-full-evidence rate при одинаковом retrieval budget. Исходные значения:
-[`policy_metrics.csv`](outputs/final_v1/analysis/policy_metrics.csv) и
-[`comparison.csv`](outputs/published_baselines/comparison.csv).
+Прирост retrieval переносится, но селективность gate переносится хуже.
+Калибровка на 200 целевых запросах улучшает recall спасаемых случаев и expected
+calibration error, однако часто поднимает долю открытия графа выше 0.89. Это
+явно зафиксировано как ограничение метода.
+
+### Внешний baseline на официальном коде
+
+Released-корпус HippoRAG для MuSiQue проверен на 1 000 уникальных query ID с
+общей top-7 evidence-метрикой. StandardRAG и HippoRAG запущены из официального
+репозитория; локальный Qwen3 для recognition memory вызывается через
+OpenAI-compatible endpoint Ollama с отключённым reasoning. Graph Rescue
+получает те же 11 656 passages через отдельно проверенный adapter.
+
+| Система | FE@7 | Support recall@7 | Median retrieval, мс | p95, мс |
+|---|---:|---:|---:|---:|
+| StandardRAG, официальный код | 0.227 | 0.580 | 149.2 | 212.0 |
+| HippoRAG, официальный код | 0.269 | 0.605 | 3 727.5 | 5 171.2 |
+| Graph Rescue shared hybrid | 0.229 | 0.571 | 37.5 | 57.4 |
+| Graph Rescue gated MRV | **0.366** | **0.643** | 103.3 | 145.9 |
+
+Парная разница FE@7 между gated MRV и официальным HippoRAG равна +0.097
+(95% CI [0.071; 0.125]). На этом внешнем переносе gate открывается для 99.8%
+запросов: опыт поддерживает вывод о качестве поиска, но не о селективности.
+Latency зависит от реализации и не интерпретируется как
+hardware-normalized speed ranking.
+
+### Чистый замер времени gate
+
+Вопрос эффективности изолирован в повторном benchmark: по 200 запросов на
+датасет, три повтора, прогретые модели и парные средние по каждому запросу.
+Относительно той же MRV-политики с always-on расширением gate уменьшает число
+graph actions и среднее online retrieval time на 6.5-12.0 мс.
+
+| Датасет | Hybrid p50, мс | Always-MRV p50, мс | Gated-MRV p50, мс | Gated p95, мс | Среднее gated − always, мс (95% CI) | Actions always → gated |
+|---|---:|---:|---:|---:|---:|---:|
+| HotpotQA | 179.1 | 212.2 | 208.2 | 284.7 | -6.6 [-8.2; -5.0] | 1.95 → 1.58 |
+| 2WikiMultiHopQA | 178.1 | 220.8 | 201.6 | 265.1 | -12.0 [-15.1; -9.1] | 1.97 → 1.50 |
+| MuSiQue | 220.1 | 288.5 | 282.8 | 363.5 | -6.5 [-8.9; -4.3] | 3.00 → 2.77 |
+
+Измерения не включают offline-построение графа/индекса и генерацию ответа.
+Они показывают умеренную экономию относительно always-on MRV внутри нашей
+системы, но не доказывают, что Graph Rescue быстрее полного внешнего GraphRAG
+pipeline. Машиночитаемые значения и provenance находятся в
+[`outputs/extended_validation_v1/`](outputs/extended_validation_v1/).
 
 ### Результат с reader-моделью
 
@@ -156,10 +191,9 @@ Hashing fallback предназначен только для unit/smoke tests �
 - [outputs/PUBLICATION_PLAN_RU.md](outputs/PUBLICATION_PLAN_RU.md) —
   публикационный план;
 - [outputs/PUBLICATION_AND_GITHUB_STRATEGY_RU_v2.md](outputs/PUBLICATION_AND_GITHUB_STRATEGY_RU_v2.md)
-  — актуальный выбор между русским и английским маршрутом и план продвижения
-  GitHub;
+  — маршрут подачи в JIIS и план распространения GitHub;
 - [docs/russian_manuscript_plan.md](docs/russian_manuscript_plan.md) — каркас
-  русскоязычной журнальной статьи.
+  русскоязычной рабочей версии статьи.
 
 Репозиторий намеренно не содержит benchmark records, derived passage text,
 model/embedding caches, checkpoints и per-query reader generations.
@@ -171,6 +205,9 @@ model/embedding caches, checkpoints и per-query reader generations.
 - Это pooled-corpus controlled study, а не официальный open-domain leaderboard.
 - Абсолютные значения нельзя напрямую сравнивать с leaderboard-таблицами других
   работ.
+- Прирост retrieval переносится на расширенные корпуса, но селективность gate
+  может не переноситься: после target recalibration граф часто открывается для
+  большинства запросов.
 - Gate уменьшает graph actions относительно always-expand proxy, но это ещё не
   доказывает превосходство над полным GraphRAG по end-to-end latency или cost.
 

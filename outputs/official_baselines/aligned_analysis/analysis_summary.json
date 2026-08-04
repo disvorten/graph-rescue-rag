@@ -1,0 +1,81 @@
+{
+  "protocol": "official-hipporag-released-musique-aligned-v1",
+  "queries": 1000,
+  "unique_query_ids": 1000,
+  "corpus_passages": 11656,
+  "evaluation_k": 7,
+  "status": "official-code local-model reproduction",
+  "not_paper_number_reproduction": true,
+  "official_repository_revision": "c617143f01477243992a63b2e2151cc003dd3b21",
+  "recognition_memory_reasoning_effort": "none",
+  "systems": {
+    "StandardRAG_official_code": {
+      "full_evidence_at_7": 0.227,
+      "support_recall_at_7": 0.57975,
+      "retrieval_latency": {
+        "mean_ms": 157.26253910001833,
+        "median_ms": 149.19885000563227,
+        "p95_ms": 211.96511999878567
+      }
+    },
+    "HippoRAG_official_code": {
+      "full_evidence_at_7": 0.269,
+      "support_recall_at_7": 0.6050833333333334,
+      "retrieval_latency": {
+        "mean_ms": 3822.608972400776,
+        "median_ms": 3727.470550016733,
+        "p95_ms": 5171.207219996721
+      }
+    },
+    "GraphRescue_hybrid": {
+      "full_evidence_at_7": 0.229,
+      "support_recall_at_7": 0.5710833333333334,
+      "retrieval_latency": {
+        "mean_ms": 38.37747200060403,
+        "median_ms": 37.452150019817054,
+        "p95_ms": 57.444055008818395
+      },
+      "mean_graph_actions": 0.0,
+      "graph_open_rate": 0.0
+    },
+    "GraphRescue_gated_MRV": {
+      "full_evidence_at_7": 0.366,
+      "support_recall_at_7": 0.6433333333333334,
+      "retrieval_latency": {
+        "mean_ms": 105.85828040057095,
+        "median_ms": 103.32074997131713,
+        "p95_ms": 145.91749003157017
+      },
+      "mean_graph_actions": 2.944,
+      "graph_open_rate": 0.998
+    }
+  },
+  "paired_full_evidence_comparisons": {
+    "GraphRescue_gated_minus_HippoRAG_full_evidence_at_7": {
+      "difference": 0.097,
+      "ci95_low": 0.07097500000000001,
+      "ci95_high": 0.125,
+      "p_value_two_sided": 0.0
+    },
+    "GraphRescue_gated_minus_StandardRAG_full_evidence_at_7": {
+      "difference": 0.139,
+      "ci95_low": 0.111,
+      "ci95_high": 0.167,
+      "p_value_two_sided": 0.0
+    },
+    "GraphRescue_gated_minus_GraphRescue_hybrid_full_evidence_at_7": {
+      "difference": 0.137,
+      "ci95_low": 0.112,
+      "ci95_high": 0.163,
+      "p_value_two_sided": 0.0
+    }
+  },
+  "offline_seconds": {
+    "StandardRAG_initialization": 0.3948759000049904,
+    "StandardRAG_indexing_this_invocation": 0.018339700007345527,
+    "HippoRAG_initialization": 4.673231499968097,
+    "HippoRAG_indexing_this_invocation": 2.6034782999777235,
+    "GraphRescue_initialization": 81.3419260000228
+  },
+  "comparability_note": "All systems use the released HippoRAG MuSiQue corpus and aligned query IDs. HippoRAG/StandardRAG are official code with local Qwen models and the released OpenIE artifact; these are not published-paper number reproductions. Online latency is descriptive because systems were executed sequentially in separate processes."
+}

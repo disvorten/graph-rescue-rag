@@ -1,0 +1,48 @@
+{
+  "corpus_path": "../work/global_corpus_protocol/musique/corpus.jsonl",
+  "train_queries_path": "../work/global_corpus_protocol/musique/train.jsonl",
+  "eval_queries_path": "../work/global_corpus_protocol/musique/eval.jsonl",
+  "output_dir": "../outputs/global_v1/musique/frozen_seed_101",
+  "cache_dir": "../work/final_protocol/cache/qwen3_embedding",
+  "model_dir": "../work/final_protocol/musique/models/qwen3-embedding_0.6b/seed_101",
+  "ollama": {
+    "base_url": "http://127.0.0.1:11434",
+    "embedding_model": "qwen3-embedding:0.6b",
+    "generation_model": "qwen3:8b",
+    "timeout_seconds": 600,
+    "reader_policies": []
+  },
+  "retrieval": {
+    "bm25_k": 180,
+    "dense_k": 180,
+    "rrf_k": 60,
+    "rerank_k": 100,
+    "seed_k": 2,
+    "final_k": 7,
+    "evidence_token_budget": 2400
+  },
+  "graph": {
+    "max_hops": 3,
+    "frontier_cap": 200,
+    "max_actions": 3,
+    "min_entity_df": 2,
+    "max_entity_df_ratio": 0.03,
+    "entity_mode": "provided",
+    "corruption_seed": 101
+  },
+  "learning": {
+    "reader_gain_weight": 0.50,
+    "token_cost_weight": 0.05,
+    "hop_cost_weight": 0.04,
+    "noise_cost_weight": 0.08,
+    "random_seed": 101
+  },
+  "evaluation": {
+    "include_classic_baselines": false,
+    "include_oracle_upper_bound": false,
+    "bootstrap_samples": 5000,
+    "latency_percentiles": [0.5, 0.95],
+    "resume_checkpoint": true,
+    "progress_every": 25
+  }
+}

@@ -1,6 +1,6 @@
 # Baseline search and reproducibility log
 
-Last checked: 2026-07-30.
+Last checked: 2026-08-04.
 
 This log records why each comparison was included, adapted, or deferred. Code
 availability can change; recheck every entry immediately before submission.
@@ -8,9 +8,11 @@ availability can change; recheck every entry immediately before submission.
 | Work | Relevant overlap | Public artifact at check date | Decision |
 |---|---|---|---|
 | KG²RAG (NAACL 2025) | semantic seeds followed by graph expansion and context organization | Official GPL-3.0 repository: <https://github.com/nju-websoft/KG2RAG> | Included as an independently implemented, equal-budget **style adaptation**. It is not an exact reproduction and copies no source code. |
+| HippoRAG / HippoRAG 2 | graph propagation and recognition memory after passage retrieval | Official MIT repository: <https://github.com/OSU-NLP-Group/HippoRAG>; released MuSiQue corpus, questions, and OpenIE artifact | Run the official code on its released MuSiQue protocol with local Qwen3 models; label it an official-code/local-model reproduction rather than a reproduction of published model-scale numbers. |
+| HopRAG (Findings ACL 2025) | lexical/semantic seeds followed by LLM-generated pseudo-query passage edges and retrieve--reason--prune traversal | Paper: <https://aclanthology.org/2025.findings-acl.97/> | Cite as the closest retrieval-order precedent. Distinguish its LLM-generated edges and online reasoning from cheap fixed links plus learned calibrated rescue. |
 | A2RAG (arXiv 2026) | adaptive cost-aware graph retrieval, evidence-sufficiency controller, progressive escalation | Paper/HTML: <https://arxiv.org/abs/2601.21162>; no code repository was linked from the paper page at check date | Cite and discuss. Exact baseline deferred until an official implementation or sufficiently complete specification is available. |
 | CatRAG (Findings of ACL 2026) | query-aware graph transitions, hub suppression, complete evidence-chain retrieval | Repository: <https://github.com/kwunhang/CatRAG>; README states that the core CatRAG logic will be released later | Cite and discuss. Recheck the repository before submission; run an exact baseline if code becomes available and can be adapted without changing the frozen protocol. |
-| HHS-RAG (JIIS 2026) | hierarchical hypergraph retrieval and subgraph-level decisions | Article: <https://doi.org/10.1007/s10844-026-01077-0>; no public code artifact was found on the article page at check date | Cite and discuss. Do not claim superiority without a reproducible implementation and aligned protocol. |
+| HHS-RAG (JIIS 2026) | hierarchical hypergraph retrieval, hyperbolic contrastive learning, and subgraph-level decisions | Official article: <https://doi.org/10.1007/s10844-026-01077-0>; the JIIS issue page lists publication on 29 July 2026 | Cite and distinguish the lightweight local passage-graph rescue objective from full hierarchical-hypergraph retrieval. Do not claim superiority without an aligned implementation. |
 | PruneRAG (arXiv 2026) | confidence-guided adaptive expansion and pruning | Paper: <https://arxiv.org/abs/2601.11024> | Related adaptive-retrieval work, but not a graph-expansion baseline under the current passage-graph protocol. |
 
 ## Inclusion rule

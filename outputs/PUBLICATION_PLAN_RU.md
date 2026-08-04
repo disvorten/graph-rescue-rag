@@ -1,430 +1,149 @@
-# Реалистичный план публикации Graph Rescue RAG
-
-Дата проверки условий: 30 июля 2026 г.
-
-## Рекомендация
-
-Оптимальный маршрут сейчас:
-
-1. Провести человеческий научный аудит; multi-seed robustness уже завершён.
-2. Отправить presubmission query в выбранный русский журнал и письменно
-   уточнить допустимость публичного preprint.
-3. Опубликовать подготовленный reproducibility package в GitHub и
-   зафиксировать первый проверенный релиз в Zenodo.
-4. После человеческой переработки разместить preprint только при подтверждённой
-   совместимости с политикой журнала и подать статью без обязательной поездки.
-
-ECIR/SIGIR/ACL лучше оставить вторым этапом. Published-pattern baseline и полный
-reader run на 3 × 1 000 и five-seed robustness завершены. Главными оставшимися
-пробелами являются независимый человеческий аудит, внешний воспроизводящий
-запуск и корректное измерение полного lifecycle cost.
-
-## Можно ли сначала опубликоваться по-русски
-
-Да, но не следует сначала публиковать полную русскую статью, а затем отправлять
-её перевод как новую английскую статью. COPE относит повторную подачу уже
-опубликованной работы к duplicate publication. Переводимая secondary
-publication допустима лишь при согласии обеих редакций, явной ссылке на
-первичную работу и маркировке перевода; это не вторая независимая научная
-публикация.
-
-Для этого проекта безопасны два маршрута:
-
-1. **Одна русскоязычная журнальная статья, но с международной индексацией.**
-   Подать финальную работу на русском в российский журнал, который принимает
-   русский язык и индексируется в Scopus/RSCI. После принятия не посылать её
-   перевод в другой журнал; для международной аудитории использовать английские
-   title/abstract, GitHub, Zenodo и разрешённый preprint/extended summary.
-2. **Сначала русская ограниченная работа, затем действительно расширенная
-   английская.** Русская статья отвечает на отдельный вопрос, например о
-   программной архитектуре и воспроизводимом локальном протоколе. Английская
-   версия обязана содержать новую исследовательскую постановку, дополнительные
-   эксперименты и выводы, цитировать первую статью и прямо раскрывать overlap в
-   cover letter. Процент отличия сам по себе ничего не гарантирует; решение
-   принимают редакторы.
-
-Для текущего почти завершённого исследования предпочтителен первый маршрут:
-он быстрее и этически проще, чем искусственно делить готовую работу.
-
-Если всё же планировать вторую международную статью, её разумная самостоятельная
-тема уже видна: **precision-aware graph rescue under uncertain edges**. Первая
-русская работа фиксирует current MRV+gate и controlled pooled-corpus evidence.
-Вторая работа должна добавить новый edge-confidence/denoising mechanism,
-реальный open-domain или domain corpus, полный одинаково измеренный
-GraphRAG lifecycle cost, актуальные public baselines и новую human/downstream
-evaluation. Тогда это не перевод, а follow-up study с новой гипотезой и
-экспериментами; первая статья явно цитируется и overlap раскрывается редактору.
-
-## Российские журналы
-
-### Основной кандидат: «Информатика и автоматизация»
-
-Журнал принимает статьи на русском и английском, индексируется в Scopus и RSCI,
-имеет категорию ВАК К1, DOI и не взимает плату за обработку и публикацию.
-Заявленный максимальный срок рецензирования — три месяца. Ограничение основного
-текста примерно 4 000 слов потребует очень компактной статьи, а подробные
-таблицы и протоколы придётся вынести в репозиторий/приложение.
-На страницах опубликованных статей журнал также указывает, что авторам
-разрешено размещать работу в интернете до и во время рассмотрения. Поскольку
-submission checklist одновременно требует ранее не опубликованную рукопись,
-перед arXiv всё равно разумно получить письменное подтверждение редакции, что
-актуальная версия этой политики распространяется на preprint.
-
-- [О журнале](https://ia.spcras.ru/index.php/sp/about)
-- [Требования к отправке](https://ia.spcras.ru/index.php/sp/about/submissions)
-- [Процесс рецензирования](https://ia.spcras.ru/index.php/sp/reviewprocess)
-- [Пример страницы с политикой предварительного размещения](https://ia.spcras.ru/index.php/sp/article/view/4061)
-
-### Более сильный, но более рискованный: «Научно-технический вестник ИТМО»
-
-Принимает русский и английский языки, входит в Scopus/RSCI/DOAJ, выходит шесть
-раз в год и не взимает плату. На официальной странице указано, что
-рецензирование после назначения рецензента обычно не превышает месяца.
-Тематически подходит раздел об искусственном интеллекте и информационных
-технологиях, но требования к новизне и качеству изложения будут выше.
-
-- [О журнале](https://ntv.ifmo.ru/)
-- [Правила рецензирования](https://ntv.ifmo.ru/ru/stat/128/rules_for_peer-reviewing.htm)
-- [Политика использования ИИ](https://ntv.ifmo.ru/ru/stat/278/ai_policy.htm)
-
-### Практико-ориентированный запасной вариант: «Программные продукты и системы»
-
-Журнал имеет категорию ВАК К1 и входит в RSCI; указывает двойное слепое
-рецензирование в течение месяца, бесплатную публикацию одобренных материалов в
-течение года и автоматическую проверку текстовых заимствований. Для него статью
-следует сильнее сфокусировать на реализованной системе, API, воспроизводимости и
-измерениях стоимости.
-
-- [О журнале и политика](https://swsys.ru/)
-- [Требования авторам](https://swsys.ru/index.php?page=5)
-
-«Искусственный интеллект и принятие решений» тематически очень близок и не
-взимает плату, однако требует экспертные заключения от организаций-мест работы
-всех авторов и принимает только ранее не опубликованные в печатных или
-электронных изданиях материалы. Если у автора нет организации, способной выдать
-такое заключение, этот вариант практически неудобен.
-
-- [Требования журнала](https://www.aidt.ru/index.php/ru/forauthors/requirements)
-
-### Практическая рекомендация
-
-Сначала направить редакции «Информатики и автоматизации» короткий presubmission
-query с аннотацией, описанием pooled-corpus setting, ссылкой на будущий
-репозиторий и честным AI-use disclosure. Если редакция подтверждает соответствие
-тематике, готовить русскую статью под её лимит. Если нет — «Программные продукты
-и системы». НТВ ИТМО использовать как более амбициозную альтернативу после
-человеческой переработки и дополнительного cost benchmark.
-
-## Проверки на ИИ и переработка текста
-
-Цель переработки — не «обмануть детектор». Автоматические AI-detectors дают
-ложноположительные и ложноотрицательные решения и не заменяют редакционную
-оценку. Реальный риск текущего текста состоит в другом: однородный стиль,
-обобщённые связки, недостаток авторских решений и невозможность автора защитить
-каждое утверждение.
-
-Перед подачей нужно:
-
-- написать заново на русском постановку задачи, мотивацию и обсуждение, не
-  переводя текущий английский черновик предложение за предложением;
-- для каждого раздела сначала составить собственный тезисный конспект без
-  просмотра AI-текста, затем сверить факты с результатами;
-- оставить только проверенные числа, ссылки и ограничения;
-- добавить авторские объяснения трёх-пяти конкретных trace cases после ручного
-  аудита;
-- вручную проверить и при необходимости переписать abstract, related work,
-  limitations и conclusion;
-- раскрыть фактическое использование генеративного ИИ по правилам выбранного
-  журнала; не указывать ИИ автором;
-- сохранить протокол человеческой проверки: дата, проверенные таблицы, запуски,
-  traces и смысловые решения.
-
-Springer Nature прямо требует disclosure использования generative AI и полной
-ответственности человека за итоговый текст. Для российского журнала нужно
-запросить актуальную политику у редакции, если она не изложена достаточно ясно.
-
-## Текущее состояние reproducibility package
-
-Локальный Git-репозиторий и ветка `main` уже инициализированы. В индекс по
-белому списку входят только публикационные файлы (более 100): исходный код,
-тесты, конфигурации, компактные
-агрегированные результаты, LaTeX/PDF, Word-документ и документация. Датасеты,
-embedding/reader caches, checkpoints, логи и временные рендеры исключены.
-Автоматический `scripts/release_audit.py` проходит; 38 тестов проходят.
-
-Метаданные для первого commit получены: Одинцов Максим,
-`maksim.odintcov@math.msu.ru`, GitHub `disvorten`, ORCID
-`0009-0000-6756-0975`, репозиторий `graph-rescue-rag`. Аффилиация остаётся
-единственным незаполненным полем рукописи и должна быть подтверждена автором.
-
-Подготовлены заполненные `CITATION.cff`, `.zenodo.json`, `DATA.md`,
-`REPRODUCING.md`, Apache-2.0 `LICENSE`, `NOTICE` и GitHub Actions workflow.
-Внутренний авторский checklist остаётся локальным и не включается в публичный
-репозиторий.
-
-## Вариант 1: Journal of Intelligent Information Systems
-
-Наиболее точный тематический кандидат после актуализации литературы. Журнал
-прямо позиционируется на стыке AI, database technologies, intelligent
-information retrieval и reasoning under uncertainty. 29 июля 2026 г. в нём
-вышла статья HHS-RAG, поэтому редакция явно принимает graph-RAG/multi-hop
-тематику, но одновременно будет особенно строго оценивать отличие нашей
-работы.
-
-Плюсы:
-
-- прямое тематическое соответствие intelligent information retrieval;
-- hybrid model: можно выбрать subscription publishing без APC;
-- не требуется поездка;
-- подходящий журнальный объём для calibration, robustness и error analysis.
-
-Минусы:
-
-- это не «лёгкая» площадка, даже если median first decision на сайте мал;
-- HHS-RAG, A2RAG и CatRAG делают общий claim об adaptive/structure-aware
-  retrieval уже неновым;
-- необходимы аккуратный related work и желательно дополнительное сравнение
-  хотя бы с публично доступным A2RAG/CatRAG, если их код и протокол совместимы.
-
-На дату проверки exact reproduction этих трёх работ затруднён: на странице
-HHS-RAG не найден публичный code artifact; arXiv/HTML A2RAG не указывает
-репозиторий; CatRAG repository содержит prompts и evaluation instances, но
-прямо сообщает, что основная логика будет опубликована позднее. Это нужно
-зафиксировать в baseline-search log и не заменять точное сравнение
-самодельной реализацией без соответствующей оговорки.
-
-Официальные страницы:
-
-- [Journal overview](https://link.springer.com/journal/10844)
-- [Publishing options and fees](https://link.springer.com/journal/10844/how-to-publish-with-us)
-- [HHS-RAG](https://link.springer.com/article/10.1007/s10844-026-01077-0)
-
-## Вариант 2: SN Computer Science
-
-Более осторожная и широкая площадка. Scope прямо включает Artificial
-Intelligence, Machine Learning и Information Retrieval. Журнал hybrid,
-указывает free submission и отсутствие page/color charges; subscription route
-обычно позволяет публиковаться без APC.
-
-Плюсы:
-
-- broad sound-science framing;
-- нет обязательной поездки;
-- методическая работа с честными отрицательными результатами соответствует
-  широкому Original Research формату.
-
-Минусы:
-
-- менее точная аудитория, чем JIIS;
-- на официальной странице указан median first decision 96 дней;
-- всё равно требуется убедительная новизна относительно работ 2026 года.
-
-Официальные страницы:
-
-- [Journal overview and scope](https://link.springer.com/journal/42979)
-- [Publishing options](https://link.springer.com/journal/42979/how-to-publish-with-us)
-
-## Вариант 3: Discover Artificial Intelligence
-
-Это наиболее прямой тематический кандидат. Журнал охватывает теорию, методологию и применения AI, включая NLP, knowledge reasoning и representation/discovery. В submission guidelines присутствует тип статьи `Methodology`, для которого требуется новый или улучшенный вычислительный метод с продемонстрированным преимуществом.
-
-Плюсы:
-
-- точное тематическое соответствие;
-- журнальный формат позволяет подробно описать метод, robustness и отрицательные результаты;
-- нет обязательной поездки;
-- принимает Research, Brief Report и Methodology.
-
-Минусы:
-
-- fully open access;
-- текущий APC: £1 190 / $1 690 / €1 390, если не применится institutional agreement, discount или waiver;
-- широкий журнал, поэтому в cover letter придётся особенно чётко объяснить новизну и отличие от KG-guided RAG.
-
-Официальные страницы:
-
-- [Aims and scope](https://link.springer.com/journal/44163/aims-and-scope)
-- [Submission guidelines](https://link.springer.com/journal/44163/submission-guidelines)
-- [Fees and funding](https://link.springer.com/journal/44163/how-to-publish-with-us)
-
-## Вариант 4: Discover Computing
-
-Бывший Information Retrieval Journal с 2024 года называется Discover Computing и стал fully open access. Сейчас scope широкий, но прямо включает AI, machine learning и NLP. Это менее узкая IR-площадка, чем прежний журнал, зато тема graph-assisted retrieval подходит.
-
-Плюсы:
-
-- историческая связь с Information Retrieval Journal;
-- broad CS scope допускает retrieval/system-oriented framing;
-- индексируется в Scopus и SCIE;
-- нет поездки.
-
-Минусы:
-
-- fully open access;
-- до 31 декабря 2026 указан discounted APC €1 140 / $1 520 / £1 040, затем выше;
-- после расширения scope название и позиционирование менее специализированы по IR.
-
-Официальные страницы:
-
-- [Aims and scope](https://link.springer.com/journal/10791/aims-and-scope)
-- [Journal overview and current APC notice](https://link.springer.com/journal/10791)
-
-## arXiv: что даёт и чего не даёт
-
-arXiv полезен как публичная фиксация результата, но его moderation не является peer review. Для первой подачи в категорию может понадобиться endorsement. arXiv также требует раскрывать значимое применение генеративных AI-инструментов, а человеческие авторы несут полную ответственность за содержание.
-
-Официальные страницы:
-
-- [arXiv moderation](https://info.arxiv.org/help/moderation/index.html)
-- [arXiv endorsement](https://info.arxiv.org/help/endorsement.html)
-
-Поэтому arXiv следует использовать после научного аудита, а не как способ опубликовать текущий машинный черновик без проверки.
-
-## Почему не нужно сейчас гнаться за ECIR
-
-Проблема не в «силе» площадки как таковой. Проблема в типе доказательств:
-
-- текущий benchmark является pooled-corpus protocol, а не официальный leaderboard;
-- KG²RAG-style baseline является независимой equal-budget адаптацией, а не
-  точным воспроизведением официальной системы;
-- полный reader evaluation завершён на всех трёх датасетах по 1 000
-  eval-вопросов;
-- latency не включает полный offline/online GraphRAG lifecycle;
-- литература и формулировки ещё требуют человеческой проверки.
-
-После закрытия этих пунктов ECIR или другая профильная IR/NLP конференция становится разумной целью. До этого журнальная Methodology article честнее соответствует зрелости работы и позволяет не ужимать важные ограничения.
-
-## Пошаговый submission checklist
-
-### Этап A. Научная готовность
-
-- Проверить и описать уже реализованный KG²RAG-style baseline.
-- Завершить reader на 1 000 eval-вопросах 2WikiMultiHopQA и MuSiQue.
-- Добавить 3-5 corruption seeds.
-- Зафиксировать hardware, p50/p95 latency и offline construction time.
-- Провести ручной аудит 100 traces.
-- Проверить все BibTeX-записи по первичным страницам.
-
-### Этап B. Человеческое авторство
-
-- Автор самостоятельно читает и понимает весь manuscript.
-- Автор проверяет dataset licensing и разрешённый режим перераспределения.
-- Автор повторяет ключевой запуск и сверяет hashes.
-- Автор принимает и документирует решения о claims, limitations и target venue.
-- Introduction, Discussion и Conclusion переписываются как выражение собственного научного суждения.
-- Использование AI раскрывается полностью; AI не указывается автором.
-
-### Этап C. Reproducibility package
-
-- [готово] Код, тесты и совместимый research environment.
-- [готово] Конфигурации основных запусков.
-- [готово] Protocol manifests и input hashes.
-- [готово] Скрипты получения основных таблиц из raw outputs.
-- [готово] README со smoke test и пошаговым полным протоколом.
-- [готово] Лицензионный allowlist: benchmark text и caches не публикуются.
-- [готово] Детерминированная стратифицированная выборка и форма для ручного
-  аудита 100 traces; сама разметка должна быть выполнена человеком.
-- [нужно] Зафиксировать точные версии среды независимого человеческого запуска.
-- [нужно] Выбрать допустимый к распространению subset traces без benchmark text.
-- [нужно] GitHub remote и Zenodo DOI для фиксированного release.
-
-## Конкретная последовательность GitHub → Zenodo → preprint
-
-1. Используются зафиксированные метаданные: Одинцов Максим,
-   `maksim.odintcov@math.msu.ru`, `disvorten/graph-rescue-rag`, ORCID
-   `0009-0000-6756-0975`.
-2. Заполненные `CITATION.cff` и `.zenodo.json` проверяются валидатором;
-   аффилиация добавляется только после подтверждения автором.
-3. Выполняются `python scripts/release_audit.py`, ручной просмотр
-   `git diff --cached` и первый commit.
-4. На GitHub создаётся пустой публичный репозиторий без автоматически
-   сгенерированных README/LICENSE, затем добавляется `origin` и отправляется
-   ветка `main`.
-5. До первого GitHub Release репозиторий включается в Zenodo GitHub
-   integration.
-6. После человеческого аудита создаётся
-   annotated tag `v0.1.0` и одноимённый GitHub Release. Zenodo архивирует именно этот
-   snapshot и выдаёт version DOI; concept DOI используется как постоянная
-   ссылка на все версии.
-7. DOI добавляется в README и рукопись, создаётся исправляющий tag `v0.1.1`,
-   если это требует новый архивируемый snapshot.
-8. Если редакция письменно подтверждает совместимость preprint, human-reviewed
-   PDF отправляется в arXiv. Страница arXiv ссылается на DOI и GitHub; README —
-   обратно на preprint.
-9. После замечаний к preprint готовится журнальная версия и cover letter.
-
-## Как сделать так, чтобы GitHub заметили
-
-Сам по себе публичный репозиторий почти не создаёт аудиторию. Продвижение должно
-вести не на «ещё один RAG-код», а на один проверяемый результат и быстрый способ
-его воспроизвести.
-
-Минимальный launch package:
-
-- чёткое название и одно предложение с отличием: hybrid retrieval first,
-  graph only as calibrated local repair;
-- таблица трёх основных результатов и одна схема в первой экранной области
-  README;
-- команда smoke test, которая работает без загрузки гигабайт данных;
-- GitHub topics: `rag`, `graph-rag`, `information-retrieval`,
-  `multi-hop-qa`, `knowledge-graph`, `ollama`, `reproducible-research`;
-- social preview 1280×640, release `v0.1.0`, Zenodo DOI и `CITATION.cff`;
-- issue templates для reproduction report и baseline request;
-- короткая русская техническая статья на Habr и английский пост/тред с одним
-  графиком, честными ограничениями и ссылкой на release;
-- адресные сообщения авторам близких работ и исследователям, но только с
-  конкретным вопросом или сравнением, без массовой рассылки;
-- после arXiv — Hugging Face Paper Page и, при необходимости, маленький
-  интерактивный demo/Space на синтетическом примере.
-
-GitHub topics помогают находить проект в тематических каталогах, social preview
-улучшает отображение ссылок, а GitHub Releases дают фиксированную версию и
-статистику загрузок. Hugging Face Paper Pages связывают arXiv-работу с кодом,
-моделями, датасетами и обсуждением.
-
-Первые реалистичные показатели интереса — не stars сами по себе, а успешный
-внешний smoke test, issue от независимого пользователя, citation/mention и
-воспроизведение хотя бы одной таблицы.
-
-### Этап D. Manuscript
-
-- Название без SOTA/универсальных обещаний.
-- Abstract менее 250 слов для Discover AI.
-- Cover letter: проблема, метод, три датасета, robustness, ограничения.
-- Data availability, code availability, funding, competing interests.
-- Author contributions.
-- AI-use disclosure.
-- Supplementary appendix с протоколами, дополнительными таблицами и error examples.
-
-## Предлагаемое позиционирование
+# План доведения Graph Rescue RAG до подачи в Q2-журнал
+
+Дата актуализации: 4 августа 2026 г.
+
+## Цель
+
+Основная площадка — **Journal of Intelligent Information Systems (JIIS)**.
+Это не обещание принятия и не утверждение постоянного квартиля: перед подачей
+квартиль проверяется в нужной базе и категории за конкретный год. Выбор JIIS
+основан прежде всего на scope: intelligent information retrieval, интеграция
+AI и database technologies, knowledge representation и reasoning under
+uncertainty.
+
+На дату проверки институциональный экспорт JCR 2024 указывает Q2 для
+`Computer Science, Information Systems`, тогда как карточка Scopus 2024
+Wageningen University указывает Q1. Поэтому формулировка «Q2-журнал» допустима
+только с указанием JCR, года и категории; в рукопись квартиль не включается.
 
 Рабочее название:
 
-> Selective Graph Rescue for Multi-Hop Retrieval: Conditional Evidence Expansion under a Calibrated Budget
+> Selective Local Graph Rescue after Hybrid Retrieval: Calibrated Evidence
+> Completion for Multi-Hop Question Answering
 
-Основной claim:
+## Центральный claim
 
-> Локальное graph expansion должно запускаться не всегда и выбирать не наиболее похожего соседа, а кандидата с максимальной условной ценностью для незавершённой evidence chain.
+После сильного BM25+dense+fusion retrieval локальное графовое дополнение может
+восстановить отсутствующую часть evidence chain. Оно запускается только при
+прогнозируемой неполноте и выбирает кандидата по условной marginal rescue
+value. Claim ограничен фиксированным passage/token budget и проверенными
+экспериментальными протоколами.
 
-Три вклада:
+Не заявляется:
 
-1. Формализация graph rescue и conditional MRV.
-2. Calibrated gate, уменьшающий graph actions без заметной потери retrieval quality.
-3. Диагностика устойчивости, показывающая, что false edges опаснее missing edges.
+- SOTA;
+- превосходство над Microsoft GraphRAG, HippoRAG, HHS-RAG или KG²RAG в целом;
+- full-Wikipedia evaluation;
+- универсальное ускорение GraphRAG;
+- независимость эффекта от reader, графа и датасета.
 
-## Реалистичный календарь
+## Что уже доказано в основном controlled protocol
 
-Недели 1-2: published baseline и аудит литературы.
+В disjoint pooled-corpus evaluation по 1 000 запросов на датасет gated MRV
+увеличил full-evidence rate относительно общего hybrid retriever:
 
-Неделя 3: полный 8B reader run.
+- HotpotQA: 0.640 → 0.810, +0.170;
+- 2WikiMultiHopQA: 0.367 → 0.572, +0.205;
+- MuSiQue: 0.156 → 0.252, +0.096.
 
-Неделя 4: corruption seeds, latency и error analysis.
+Эффект проверен на нескольких training seeds и двух embedding backbones.
+Equal-budget KG²RAG-style control показывает, что generic graph expansion
+объясняет часть выигрыша, но не весь observed gap. Qwen3-8B reader даёт
+значимый Answer-F1 gain на HotpotQA и 2Wiki; прирост на MuSiQue после
+коррекции незначим. False-edge corruption вреднее сопоставимого edge dropout.
 
-Неделя 5: человеческая переработка текста и claims.
+Эти результаты дают внутреннее подтверждение гипотезы. Ниже перечислены уже
+выполненные проверки, которые добавляют внешнюю и вычислительную валидность.
 
-Неделя 6: public release, Zenodo, финальная LaTeX-сборка.
+## Выполненные дополнительные проверки
 
-Неделя 7: arXiv после проверки.
-Неделя 8: journal submission.
+| Блок | Фактический объём | Итог |
+|---|---|---|
+| Global transfer | 17 375 unseen official-dev queries, 3 датасета | FE gain +0.073…+0.116; все paired CI исключают ноль |
+| Official baseline | 1 000 unique IDs, 11 656 released MuSiQue passages | Gated MRV − HippoRAG FE@7 = +0.097 [0.071; 0.125] |
+| Equal-budget comparison | Общий released corpus и `k=7` | Graph Rescue FE@7 0.366; HippoRAG 0.269; StandardRAG 0.227 |
+| Latency | 200 queries × 3 повтора на датасет | Gated − always-on MRV: -6.5…-12.0 мс paired mean |
+| Failure funnel | Anchor/reachability/gate/selector strata | Counts и effect сохранены в generated table |
+| Robustness | Missing и false edges, 5 seeds | False edges устойчиво вреднее dropout |
+| Reproducibility | Frozen configs, compact outputs, fingerprint v2 | 58 tests проходят; release audit выполняется перед push |
 
-Сроки ориентировочны: качество человеческой проверки важнее формального календаря.
+Ключевой отрицательный результат: retrieval gain переносится, но селективность
+gate переносится хуже. В official-code сравнении gate открывается на 99.8%
+запросов; target recalibration в global protocol также часто поднимает open
+rate выше 0.89. Поэтому статья не обещает универсальную compute-экономию.
+
+## Решения по результатам global transfer
+
+1. **Положительный перенос на трёх датасетах.** Вынести transfer table в
+   основной текст; pooled experiment оставить как controlled mechanism study.
+2. **Положительный перенос только на части датасетов.** Сузить claim и объяснить
+   различия через graph reachability, support count и gate open rate.
+3. **Нулевой перенос.** Не скрывать результат; позиционировать работу как
+   исследование переобучения локального rescue и условий применимости.
+4. **Отрицательный перенос.** Не подавать текущую версию как improvement paper;
+   сначала реализовать edge confidence/domain calibration и повторить protocol.
+
+## Структура рукописи JIIS
+
+1. Introduction: структурный failure mode hybrid retrieval и точные вклады.
+2. Related Work: hybrid IR, multi-hop retrieval, GraphRAG/KG-guided RAG,
+   adaptive/cost-aware retrieval.
+3. Method: graph construction, candidate paths, MRV objective, preflight и
+   continuation gates, equal-budget constraints.
+4. Experimental Design: datasets, splits, corpora, baselines, metrics,
+   statistical tests, hardware and models.
+5. Results: controlled retrieval, global transfer, official-code baseline,
+   reader metrics и latency.
+6. Error and Robustness Analysis: failure funnel, graph corruption и
+   qualitative cases.
+7. Limitations: not full-wiki, lightweight graph, local 8B reader, baseline
+   alignment and lifecycle boundary.
+8. Reproducibility and declarations.
+9. Conclusion: подтверждённые и неподтверждённые выводы.
+
+## Таблицы основного текста
+
+Чтобы не превысить 25 страниц и сохранить читаемость:
+
+1. datasets/corpus/protocol summary;
+2. primary pooled retrieval results;
+3. global unseen-dev transfer;
+4. aligned official-code baseline;
+5. reader results;
+6. compact latency/resource comparison;
+7. failure funnel или corruption robustness.
+
+Seed-level, embedding-backbone, calibration-bin и полный corruption grid можно
+вынести в supplementary material или GitHub aggregates.
+
+## Пакет подачи
+
+Локальная папка подачи должна содержать плоский набор:
+
+- `main.tex`;
+- `references.bib`;
+- `svjour3.cls`, `svglov3.clo`, bibliography style;
+- детерминированно построенные figure files;
+- сгенерированные `.tex`-таблицы;
+- `main.pdf`;
+- cover letter как отдельный файл для submission form.
+
+Нужно подтвердить до отправки:
+
+- точное англоязычное название подразделения МГУ;
+- почтовый адрес, если он должен быть опубликован;
+- отсутствие или наличие специального финансирования;
+- отсутствие или наличие competing interests;
+- единоличный author contribution либо список соавторов с реальным вкладом.
+
+## Резервная стратегия
+
+Резервную площадку выбирают после получения редакционного решения, а не заранее
+по одному названию. Если JIIS отклоняет работу по scope, нужен более широкий
+IR/information-systems журнал. Если по новизне или экспериментам — сначала
+исправляются указанные научные недостатки. При каждой переподаче заново
+проверяются scope, квартиль, индексация, APC и требования к формату.
+
+Полная русская статья до решения JIIS не публикуется отдельно: русский текст
+используется как рабочая теория и подробное объяснение экспериментов, чтобы не
+создавать риск duplicate publication.

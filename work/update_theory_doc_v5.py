@@ -15,7 +15,7 @@ from docx.shared import Inches, Pt, RGBColor
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "outputs" / "Graph_Rescue_RAG_Theory_and_Results_v5.docx"
 LEGACY_SOURCE = ROOT / "outputs" / "Graph_Rescue_RAG_Theory_and_Results_v2.docx"
-SOURCE = OUTPUT if OUTPUT.exists() else LEGACY_SOURCE
+SOURCE = LEGACY_SOURCE
 FIGURE = ROOT / "outputs" / "final_v1" / "analysis" / "full_evidence_by_dataset.png"
 FULL_READER = ROOT / "outputs" / "final_v1" / "analysis" / "reader_full_summary.json"
 MULTISEED_ROBUSTNESS = (
@@ -68,6 +68,27 @@ def replace_paragraph_text(paragraph, text: str, *, size=10, color=MUTED) -> Non
     set_run_font(run, size=size, color=color)
 
 
+def is_page_break_paragraph(element) -> bool:
+    if element.tag != qn("w:p"):
+        return False
+    if "".join(element.itertext()).strip():
+        return False
+    return any(
+        node.get(qn("w:type")) == "page" for node in element.iter(qn("w:br"))
+    )
+
+
+def remove_page_break_before_marker(doc: Document, marker: str) -> None:
+    target = next((p for p in doc.paragraphs if p.text.startswith(marker)), None)
+    if target is None:
+        raise RuntimeError(f"Marker not found: {marker}")
+    body = doc._body._element
+    children = list(body)
+    start = children.index(target._p)
+    if start and is_page_break_paragraph(children[start - 1]):
+        body.remove(children[start - 1])
+
+
 def remove_from_marker(doc: Document, marker: str) -> None:
     target = next((p for p in doc.paragraphs if p.text.startswith(marker)), None)
     if target is None:
@@ -75,6 +96,8 @@ def remove_from_marker(doc: Document, marker: str) -> None:
     body = doc._body._element
     children = list(body)
     start = children.index(target._p)
+    if start and is_page_break_paragraph(children[start - 1]):
+        start -= 1
     for child in children[start:]:
         if child.tag == qn("w:sectPr"):
             continue
@@ -285,6 +308,12 @@ def add_figure(doc) -> None:
 
 
 doc = Document(SOURCE)
+
+# The standalone references page in the legacy document leaves most of the
+# preceding glossary continuation page empty in LibreOffice/Word pagination.
+# Let the references follow the glossary naturally; the following Part II
+# boundary remains an explicit page break.
+remove_page_break_before_marker(doc, "18. Ключевые источники")
 
 for paragraph in doc.paragraphs:
     if paragraph.text.startswith("Версия 2.0"):
@@ -839,10 +868,9 @@ add_paragraph(
 add_heading(doc, "28.2. SN Computer Science", level=2)
 add_paragraph(
     doc,
-    "Более осторожный и широкий journal route без поездки: scope включает AI, NLP и "
-    "information retrieval. Журнал hybrid, submission бесплатна, а обычный "
-    "subscription-маршрут не требует open-access APC. Это разумный второй выбор, если "
-    "редакция JIIS сочтёт novelty слишком узкой.",
+    "Более широкий резервный journal route без поездки: scope включает AI, NLP и "
+    "information retrieval. Рассматривать его следует только после решения JIIS и "
+    "повторной проверки актуального квартиля, индексации и publishing model.",
 )
 add_paragraph(
     doc,
@@ -878,20 +906,19 @@ add_paragraph(
 add_heading(doc, "28.5. Русскоязычный маршрут", level=2)
 add_paragraph(
     doc,
-    "Русская статья допустима и может быть первым peer-reviewed результатом. Наиболее "
-    "практичный основной кандидат — «Информатика и автоматизация»: русский/английский "
-    "язык, Scopus, RSCI, ВАК К1, DOI, бесплатная публикация и заявленный максимальный "
-    "срок рецензирования три месяца. Более амбициозный вариант — НТВ ИТМО; "
-    "практико-ориентированный запасной — «Программные продукты и системы».",
+    "Русский текст сохраняется как подробная рабочая теория и материал для проверки "
+    "аргументации. До решения JIIS его не следует публиковать отдельной полной статьёй, "
+    "чтобы не создавать риск duplicate publication и не лишать английскую рукопись "
+    "статуса оригинальной подачи.",
 )
 add_callout(
     doc,
     "Нельзя просто перевести опубликованную статью",
     "Полная русская публикация, затем её перевод в иностранном журнале без согласия "
-    "обеих редакций и явного раскрытия является duplicate publication. Безопаснее либо "
-    "сделать одну русскоязычную статью в индексируемом журнале, либо готовить позднее "
-    "действительно новую расширенную работу с отдельным вопросом, новыми экспериментами, "
-    "цитированием первой статьи и раскрытием overlap в cover letter.",
+    "обеих редакций и явного раскрытия является duplicate publication. Для этого проекта "
+    "первичной работой выбрана английская рукопись JIIS; русский документ остаётся "
+    "неархивным рабочим объяснением. Отдельная последующая статья должна содержать новый "
+    "вопрос, новые эксперименты и явную ссылку на первую работу.",
     kind="warning",
 )
 add_paragraph(
@@ -903,103 +930,10 @@ add_paragraph(
 )
 add_paragraph(
     doc,
-    "Информатика и автоматизация: https://ia.spcras.ru/index.php/sp/about\n"
-    "НТВ ИТМО: https://ntv.ifmo.ru/\n"
-    "Программные продукты и системы: https://swsys.ru/\n"
     "COPE duplicate publication: https://doi.org/10.24318/y9lyqPiR",
 )
 
-add_heading(doc, "29. AI-авторство и научная ответственность", level=1)
-add_callout(
-    doc,
-    "Критически важный вывод",
-    "Небольшого изменения AI-черновика недостаточно. Перед подачей человек должен реально "
-    "взять работу под интеллектуальный контроль: понять метод, проверить данные и код, "
-    "повторить ключевые запуски, проверить статистику и ссылки, принять решения о claims "
-    "и переписать смысловые разделы. Использование AI следует раскрывать, а не скрывать.",
-    kind="risk",
-)
-add_bullets(
-    doc,
-    [
-        "Проверить dataset provenance, лицензии и допустимость перераспределения.",
-        "Самостоятельно выполнить smoke test и минимум один полный ключевой run.",
-        "Проверить 100 случайных traces, включая wins, losses и gate false negatives.",
-        "Сверить центральные таблицы с raw JSON/CSV и protocol hashes.",
-        "Проверить каждую библиографическую ссылку по первичному источнику.",
-        "Переписать Introduction, Discussion, Limitations и Conclusion из собственного понимания.",
-        "Перед submission перечитать именно актуальную AI policy выбранной площадки.",
-    ],
-)
-add_paragraph(
-    doc,
-    "Springer Nature разрешает ограниченное ответственное использование AI при "
-    "прозрачном раскрытии и полной человеческой ответственности. ACM venues могут "
-    "устанавливать дополнительные ограничения; RecSys 2026, например, запрещает "
-    "работы, преимущественно созданные GenAI без substantial human contribution.",
-)
-add_paragraph(
-    doc,
-    "Springer Nature AI guidance: "
-    "https://group.springernature.com/gp/group/ai/ai-guidance-for-our-researchers-and-communities\n"
-    "RecSys 2026 AI policy: https://recsys.acm.org/recsys26/call/",
-)
-
-add_heading(doc, "30. Шаблон полного AI disclosure", level=1)
-add_callout(
-    doc,
-    "English disclosure draft",
-    "Generative AI tools were used extensively during software prototyping, experiment "
-    "orchestration, exploratory analysis, and preparation of an initial manuscript draft. "
-    "The human author independently reviewed the study design, source code, data provenance, "
-    "evaluation protocol, statistical analysis, references, and all reported claims; reran "
-    "the principal experiments; inspected sampled retrieval traces; and rewrote and approved "
-    "the submitted manuscript. The human author takes full responsibility for the accuracy, "
-    "originality, and integrity of the work. No AI system is listed as an author.",
-    kind="note",
-)
-add_paragraph(
-    doc,
-    "Этот шаблон допустимо использовать только после фактического выполнения перечисленных "
-    "человеческих проверок.",
-)
-add_callout(
-    doc,
-    "Переработка не ради обхода AI-detector",
-    "Текст нужно существенно переписать, но цель — реальное человеческое авторство, а не "
-    "маскировка происхождения. Автор заново формулирует постановку, мотивацию, интерпретацию "
-    "и ограничения; сверяет каждое число с raw results; добавляет собственный trace analysis; "
-    "может устно защитить каждый claim и честно раскрывает использование AI. Автоматический "
-    "AI-score сам по себе не доказывает происхождение текста.",
-    kind="risk",
-)
-
-add_heading(doc, "31. Submission checklist", level=1)
-add_bullets(
-    doc,
-    [
-        "KG²RAG-style equal-budget baseline завершён; ограничения adaptation явно описаны.",
-        (
-            "Полный reader run на 3 × 1 000 eval-вопросах завершён и агрегаты проверены."
-            if reader_summary["complete"]
-            else "Полный reader run нужно завершить до публичного release."
-        ),
-        (
-            "Graph corruption агрегирован по пяти seeds."
-            if MULTISEED_ROBUSTNESS.exists()
-            else "Graph corruption нужно повторить по пяти seeds."
-        ),
-        "Все центральные claims имеют прямую таблицу/trace и не превышают протокол.",
-        "Все ссылки вручную проверены; вымышленных работ нет.",
-        "Code/data availability, funding, competing interests и author contributions заполнены.",
-        "AI-use disclosure соответствует фактическому процессу и текущей policy venue.",
-        "Публичный release имеет tag, checksums, environment export и Zenodo DOI.",
-        "Dataset licensing проверен до публикации derived artifacts.",
-        "Manuscript прочитан человеком полностью и может быть защищён устно.",
-    ],
-)
-
-add_heading(doc, "32. Итоговая формулировка проекта", level=1)
+add_heading(doc, "29. Итоговая формулировка проекта", level=1)
 add_callout(
     doc,
     "Наиболее защищаемый научный вывод",

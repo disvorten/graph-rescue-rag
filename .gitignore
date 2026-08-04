@@ -11,6 +11,8 @@ tmp/
 work/*
 !work/prepare_external_pilots.py
 !work/prepare_final_protocol.py
+!work/prepare_global_corpus_protocol.py
+!work/prepare_hipporag_benchmark_adapter.py
 !work/run_final_suite.py
 !work/run_final_robustness.py
 !work/analyze_multiseed_robustness.py
@@ -20,9 +22,18 @@ work/*
 !work/run_reader_analysis.py
 !work/analyze_final_results.py
 !work/generate_paper_assets.py
+!work/generate_jiis_extended_assets.py
+!work/build_jiis_submission.py
 !work/run_kg2rag_style_baseline.py
+!work/run_latency_benchmark.py
+!work/run_official_hipporag_baseline.py
 !work/analyze_published_baselines.py
+!work/analyze_global_results.py
+!work/analyze_gate_transfer.py
+!work/analyze_official_baselines.py
+!work/analyze_failure_funnel.py
 !work/update_theory_doc_v5.py
+!work/update_theory_doc_v6.py
 !work/qa_docx.py
 !work/doc_assets/
 work/doc_assets/*
@@ -47,9 +58,38 @@ outputs/published_baselines/*
 !outputs/published_baselines/comparison.csv
 !outputs/published_baselines/REPORT_RU.md
 
+!outputs/global_v1/
+outputs/global_v1/*
+!outputs/global_v1/analysis/
+!outputs/global_v1/analysis/analysis_summary.json
+!outputs/global_v1/analysis/paired_outcomes.csv
+!outputs/global_v1/analysis/REPORT.md
+!outputs/global_v1/gate_transfer/
+!outputs/global_v1/gate_transfer/analysis_summary.json
+!outputs/global_v1/gate_transfer/REPORT.md
+
+!outputs/official_baselines/
+outputs/official_baselines/*
+!outputs/official_baselines/aligned_analysis/
+!outputs/official_baselines/aligned_analysis/analysis_summary.json
+!outputs/official_baselines/aligned_analysis/comparison.csv
+!outputs/official_baselines/aligned_analysis/REPORT.md
+
+!outputs/latency_v1/
+outputs/latency_v1/*
+!outputs/latency_v1/hotpot.json
+!outputs/latency_v1/2wiki.json
+!outputs/latency_v1/musique.json
+
+!outputs/extended_validation_v1/
+outputs/extended_validation_v1/*
+!outputs/extended_validation_v1/summary.json
+!outputs/extended_validation_v1/REPORT.md
+
 # Full Word/LaTeX manuscripts remain local until the selected venue confirms
 # its preprint/public-repository policy. Compact aggregate results stay public.
 outputs/Graph_Rescue_RAG_Theory_and_Results_v5.docx
+outputs/Graph_Rescue_RAG_Theory_and_Results_v6.docx
 outputs/Graph_Rescue_RAG_Article_RU_draft.md
 outputs/Graph_Rescue_RAG_Article_RU_draft.docx
 outputs/graph_rescue_article/

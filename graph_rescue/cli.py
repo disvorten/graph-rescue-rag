@@ -25,6 +25,35 @@ def print_json(value) -> None:
     print(json.dumps(value, ensure_ascii=False, indent=2))
 
 
+def evaluation_model_artifacts(config: ExperimentConfig) -> dict[str, str | None]:
+    """Resolve the frozen files needed by ``evaluate`` without building indexes."""
+    model_dir = Path(config.model_dir)
+    preflight = model_dir / "preflight_gate_model.json"
+    if not preflight.exists():
+        preflight = model_dir / "gate_model.json"
+    continuation = model_dir / "continue_gate_model.json"
+    return {
+        "mrv": str(model_dir / "mrv_model.json"),
+        "preflight_gate": str(preflight),
+        "continue_gate": str(continuation) if continuation.exists() else None,
+    }
+
+
+def validate_evaluation_model_artifacts(config: ExperimentConfig) -> dict[str, str | None]:
+    artifacts = evaluation_model_artifacts(config)
+    missing = [
+        path
+        for name, path in artifacts.items()
+        if name != "continue_gate" and path is not None and not Path(path).is_file()
+    ]
+    if missing:
+        raise FileNotFoundError(
+            "Frozen evaluation model artifacts are missing: "
+            + ", ".join(missing)
+        )
+    return artifacts
+
+
 def command_doctor(args: argparse.Namespace) -> int:
     config = load_config(args.config)
     client = OllamaClient(
@@ -45,7 +74,9 @@ def command_doctor(args: argparse.Namespace) -> int:
             "corpus": config.corpus_path,
             "train_queries": config.train_queries_path,
             "eval_queries": config.eval_queries_path,
+            "model_dir": config.model_dir,
         },
+        "evaluation_model_artifacts": evaluation_model_artifacts(config),
     }
     print_json(report)
     return 0 if report["embedding_model_ready"] else 2
@@ -66,7 +97,12 @@ def command_train(args: argparse.Namespace) -> int:
 
 
 def command_evaluate(args: argparse.Namespace) -> int:
-    experiment = make_experiment(args)
+    config = load_config(args.config)
+    validate_evaluation_model_artifacts(config)
+    experiment = Experiment(
+        config,
+        allow_hashing_fallback=getattr(args, "hashing_fallback", False),
+    )
     print_json(experiment.evaluate())
     return 0
 
